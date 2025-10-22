@@ -13,12 +13,41 @@ export const postsRouter = router({
   /**
    * Get all posts (public)
    */
-  getAll: publicProcedure.query(async () => {}),
+  getAll: publicProcedure.query(async () => {
+    const db = await getDb()
+    if (!db) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      })
+    }
+
+    const allPosts = await db.select().from(posts).orderBy(posts.publishedAt)
+    return allPosts
+  }),
 
   /**
    * Get post by slug (public)
    */
-  getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {}),
+  getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
+    const db = await getDb()
+    if (!db) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Database not available",
+      })
+    }
+
+    const [post] = await db.select().from(posts).where(eq(posts.slug, input.slug))
+    if (!post) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Post not found",
+      })
+    }
+
+    return post
+  }),
 
   /**
    * Create new post (admin only)

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --primary: oklch(0.2 0.05 240);
+  --primary-foreground: oklch(0.98 0.01 60);
+  --radius: 0.25rem;
+  --background: oklch(0.98 0.01 60);
+  --foreground: oklch(0.15 0.05 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.05 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.05 240);
+  --secondary: oklch(0.95 0.01 60);
+  --secondary-foreground: oklch(0.2 0.05 240);
+  --muted: oklch(0.92 0.01 60);
+  --muted-foreground: oklch(0.45 0.03 240);
+  --accent: oklch(0.55 0.18 60);
+  --accent-foreground: oklch(0.15 0.05 240);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.85 0.01 240);
+  --input: oklch(0.85 0.01 240);
+  --ring: oklch(0.55 0.18 60);
+
+  --font-serif: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+}
