@@ -36,6 +36,11 @@ async function startServer() {
 
   registerOAuthRoutes(app)
 
+  // Health check endpoint for Railway
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", timestamp: new Date().toISOString() })
+  })
+
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -50,15 +55,22 @@ async function startServer() {
     serveStatic(app)
   }
 
-  const preferredPort = Number.parseInt(process.env.PORT || "3000")
-  const port = await findAvailablePort(preferredPort)
+  // Railway requires using the exact PORT provided
+  const port = Number.parseInt(process.env.PORT || "3000")
+  
+  // Only try to find alternative port in development
+  const finalPort = process.env.NODE_ENV === "production" 
+    ? port 
+    : await findAvailablePort(port)
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`)
+  if (finalPort !== port && process.env.NODE_ENV !== "production") {
+    console.log(`Port ${port} is busy, using port ${finalPort} instead`)
   }
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`)
+  server.listen(finalPort, "0.0.0.0", () => {
+    console.log(`✅ Server running on port ${finalPort}`)
+    console.log(`Environment: ${process.env.NODE_ENV || "development"}`)
+    console.log(`Database: ${process.env.DATABASE_URL ? "Connected" : "Not configured"}`)
   })
 }
 
