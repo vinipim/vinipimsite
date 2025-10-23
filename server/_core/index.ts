@@ -7,6 +7,7 @@ import { registerOAuthRoutes } from "./oauth"
 import { appRouter } from "../routers"
 import { createContext } from "./context"
 import { serveStatic, setupVite } from "./vite"
+import path from "path" // <— adicionado
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
@@ -49,18 +50,23 @@ async function startServer() {
     }),
   )
 
+  // Ambiente de desenvolvimento usa Vite
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server)
   } else {
-    serveStatic(app)
+    // Em produção, servir os arquivos estáticos
+    const distPath = path.join(process.cwd(), "dist", "client")
+    // Se o build gerar "dist" direto, troque a linha acima por:
+    // const distPath = path.join(process.cwd(), "dist")
+    serveStatic(app, distPath)
   }
 
-  // Railway requires using the exact PORT provided
+  // Railway requer usar a porta exata provida pela variável PORT
   const port = Number.parseInt(process.env.PORT || "3000")
-  
-  // Only try to find alternative port in development
-  const finalPort = process.env.NODE_ENV === "production" 
-    ? port 
+
+  // Só tenta achar porta alternativa no dev
+  const finalPort = process.env.NODE_ENV === "production"
+    ? port
     : await findAvailablePort(port)
 
   if (finalPort !== port && process.env.NODE_ENV !== "production") {
