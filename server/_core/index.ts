@@ -55,7 +55,7 @@ async function startServer() {
     await setupVite(app, server)
   } else {
     // Em produção, servir os arquivos estáticos
-    const distPath = path.join(process.cwd(), "dist")
+    const distPath = path.join(process.cwd(), "dist/public")
     // Se o build gerar "dist" direto, troque a linha acima por:
     // const distPath = path.join(process.cwd(), "dist")
     serveStatic(app, distPath)
