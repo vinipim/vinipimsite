@@ -1,19 +1,18 @@
 import express from "express";
 import { createServer } from "http";
 import path from "node:path";
+import fs from "node:fs";
 console.log("\u{1F680} Starting Vinipim Portfolio Server...");
 const app = express();
 const server = createServer(app);
 console.log("\u{1F4C1} Serving static files from:", path.join(process.cwd(), "dist"));
+console.log("CWD:", process.cwd());
+console.log("Dist exists:", fs.existsSync(path.join(process.cwd(), "dist")));
 app.use(express.static(path.join(process.cwd(), "dist")));
 console.log("\u{1F3E5} Setting up health check...");
 app.get("/health", (req, res) => {
   console.log("\u{1F49A} Health check requested");
-  res.status(200).json({
-    status: "ok",
-    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-    environment: process.env.NODE_ENV || "development"
-  });
+  res.status(200).json({ status: "ok" });
 });
 console.log("\u{1F3E0} Setting up root route...");
 app.get("/", (req, res) => {

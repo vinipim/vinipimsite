@@ -21,11 +21,7 @@ console.log("🏥 Setting up health check...");
 // Health check - SEMPRE funciona
 app.get("/health", (req, res) => {
   console.log("💚 Health check requested");
-  res.status(200).json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || "development"
-  });
+  res.status(200).json({ status: "ok" });
 });
 
 console.log("🏠 Setting up root route...");
