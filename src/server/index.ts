@@ -23,9 +23,13 @@ app.get("/", (req, res) => {
   res.status(200).send("Vinipim Portfolio API is running");
 });
 
-// SPA fallback - serve index.html for all other routes
-app.all('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+// SPA fallback - serve index.html for all other GET routes
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+  } else {
+    next();
+  }
 });
 
 // Start server
