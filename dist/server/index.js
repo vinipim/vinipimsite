@@ -1,5 +1,4 @@
 // src/server/index.ts
-import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 var app = express();
