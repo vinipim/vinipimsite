@@ -17,7 +17,15 @@ app.get("/health", (req, res) => {
 console.log("\u{1F3E0} Setting up root route...");
 app.get("/", (req, res) => {
   console.log("\u{1F3E0} Root route requested");
-  res.status(200).send("Vinipim Portfolio API is running");
+  const filePath = path.join(process.cwd(), "dist", "index.html");
+  console.log("\u{1F4C4} Serving index.html from:", filePath);
+  console.log("Index.html exists:", fs.existsSync(filePath));
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Error sending index.html:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
 });
 console.log("\u{1F504} Setting up SPA fallback...");
 app.use((req, res, next) => {
