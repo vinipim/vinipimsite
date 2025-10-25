@@ -5,7 +5,17 @@ builder = "nixpacks"
 startCommand = "pnpm start"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
+healthcheckPath = "/health"
+healthcheckTimeout = 300
 
 [nixpacks]
 # Ensure pnpm is used
 providers = ["node"]
+
+# Custom setup commands
+[nixpacks.setup]
+cmds = ["echo 'Setting up environment...'"]
+
+# Post-deploy hooks
+[deploy.hooks]
+postDeploy = "pnpm db:setup"

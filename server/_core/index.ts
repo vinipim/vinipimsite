@@ -36,6 +36,46 @@ async function startServer() {
 
   registerOAuthRoutes(app)
 
+  // Health check endpoint for Railway with database connectivity check
+  app.get("/health", async (req, res) => {
+    try {
+      // Import here to avoid circular dependencies
+      const { checkDatabaseConnection } = await import("../db");
+      
+      // Check database connectivity
+      const isDatabaseConnected = await checkDatabaseConnection();
+      
+      if (isDatabaseConnected) {
+        res.status(200).json({ 
+          status: "ok", 
+          database: "connected",
+          timestamp: new Date().toISOString(),
+          environment: process.env.NODE_ENV
+        });
+      } else {
+        // If database is not connected, return 503 Service Unavailable
+        res.status(503).json({ 
+          status: "error", 
+          database: "disconnected",
+          timestamp: new Date().toISOString(),
+          message: "Database connection failed"
+        });
+      }
+    } catch (error) {
+      console.error("[Health Check] Error:", error);
+      res.status(500).json({ 
+        status: "error", 
+        message: "Health check failed",
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  // Root endpoint for Railway health checks
+  app.get("/", (req, res) => {
+    res.status(200).send("Vinipim Portfolio API is running");
+  });
+
   app.use(
     "/api/trpc",
     createExpressMiddleware({
@@ -50,16 +90,28 @@ async function startServer() {
     serveStatic(app)
   }
 
-  const preferredPort = Number.parseInt(process.env.PORT || "3000")
-  const port = await findAvailablePort(preferredPort)
-
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`)
+    // Railway/Cloud platforms provide PORT env variable and we should use it directly
+  const port = Number.parseInt(process.env.PORT || "3000")
+  const host = process.env.HOST || "0.0.0.0"
+  
+  // In production, use the provided port directly without checking availability
+  if (process.env.NODE_ENV === "production") {
+    server.listen(port, host, () => {
+      console.log(`🚀 Server running in PRODUCTION mode on ${host}:${port}`)
+      console.log(`🌐 Health check: http://${host}:${port}/health`)
+    })
+  } else {
+    // In development, check for port availability
+    const availablePort = await findAvailablePort(port)
+    
+    if (availablePort !== port) {
+      console.log(`⚠️  Port ${port} is busy, using port ${availablePort} instead`)
+    }
+    
+    server.listen(availablePort, () => {
+      console.log(`🛠️  Server running in DEVELOPMENT mode on http://localhost:${availablePort}/`)
+    })
   }
-
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`)
-  })
 }
 
 startServer().catch(console.error)

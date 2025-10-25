@@ -7,10 +7,13 @@
     "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "check": "tsc --noEmit",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "db:setup": "tsx scripts/setup-database.ts",
+    "create:admin": "tsx scripts/create-admin.ts",
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
     "format": "prettier --write .",
     "start": "NODE_ENV=production node dist/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy:prepare": "npm run db:setup && npm run create:admin"
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "latest",
