@@ -1,9 +1,13 @@
 // import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
+import path from "node:path";
 
 const app = express();
 const server = createServer(app);
+
+// Serve static files from dist directory
+app.use(express.static(path.join(process.cwd(), 'dist')));
 
 // Health check - SEMPRE funciona
 app.get("/health", (req, res) => {
@@ -17,6 +21,11 @@ app.get("/health", (req, res) => {
 // Root
 app.get("/", (req, res) => {
   res.status(200).send("Vinipim Portfolio API is running");
+});
+
+// SPA fallback - serve index.html for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 
 // Start server

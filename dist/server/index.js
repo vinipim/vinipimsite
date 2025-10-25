@@ -1,8 +1,10 @@
 // src/server/index.ts
 import express from "express";
 import { createServer } from "http";
+import path from "node:path";
 var app = express();
 var server = createServer(app);
+app.use(express.static(path.join(process.cwd(), "dist")));
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -12,6 +14,9 @@ app.get("/health", (req, res) => {
 });
 app.get("/", (req, res) => {
   res.status(200).send("Vinipim Portfolio API is running");
+});
+app.get("*", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "dist", "index.html"));
 });
 var port = process.env.PORT || 3e3;
 server.listen(port, "0.0.0.0", () => {
