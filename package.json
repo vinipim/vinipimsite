@@ -4,21 +4,14 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-<<<<<<< HEAD
-    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js",
     "check": "tsc --noEmit",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "db:setup": "tsx scripts/setup-database.ts",
-    "create:admin": "tsx scripts/create-admin.ts",
-    "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
-=======
-"build": "pnpm exec vite build && pnpm exec esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:setup": "pnpm db:generate && pnpm db:push",
-    "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
->>>>>>> 7fd43ae83b63db3cb28e177a5f07135d563dea81
+    "create:admin": "tsx scripts/create-admin.ts",
+    "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
     "format": "prettier --write .",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "start:dev": "cross-env NODE_ENV=development node dist/index.js",

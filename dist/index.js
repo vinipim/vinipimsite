@@ -1,107 +1,181 @@
-// server/_core/index.ts
-import "dotenv/config";
-import express2 from "express";
-import { createServer } from "http";
-import net from "net";
-import { createExpressMiddleware } from "@trpc/server/adapters/express";
-
-// shared/const.ts
-var API_URL = process.env.VITE_API_URL || "/api";
-var UNAUTHED_ERR_MSG = "Unauthorized";
-var NOT_ADMIN_ERR_MSG = "Not an admin";
-var COOKIE_NAME = "session";
-var ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1e3;
-
-// server/db.ts
-import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 
 // drizzle/schema.ts
-import { mysqlEnum, mysqlTable, text, timestamp, varchar, int } from "drizzle-orm/mysql-core";
-var users = mysqlTable("users", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  lastSignedIn: timestamp("lastSignedIn").defaultNow()
-});
-var adminCredentials = mysqlTable("adminCredentials", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  email: varchar("email", { length: 320 }).notNull().unique(),
-  passwordHash: text("passwordHash").notNull(),
-  name: text("name"),
-  createdAt: timestamp("createdAt").defaultNow(),
-  lastLogin: timestamp("lastLogin")
-});
-var posts = mysqlTable("posts", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  slug: varchar("slug", { length: 255 }).notNull().unique(),
-  title: text("title").notNull(),
-  excerpt: text("excerpt"),
-  content: text("content").notNull(),
-  coverImage: text("coverImage"),
-  category: varchar("category", { length: 100 }).notNull(),
-  featured: mysqlEnum("featured", ["yes", "no"]).default("no").notNull(),
-  publishedAt: timestamp("publishedAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow(),
-  authorId: varchar("authorId", { length: 64 })
-});
-var reviews = mysqlTable("reviews", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  type: mysqlEnum("type", ["film", "album", "book"]).notNull(),
-  title: text("title").notNull(),
-  creator: text("creator"),
-  year: int("year"),
-  rating: int("rating").notNull(),
-  notes: text("notes"),
-  tags: text("tags"),
-  coverImage: text("coverImage"),
-  apiId: varchar("apiId", { length: 255 }),
-  metadata: text("metadata"),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow(),
-  userId: varchar("userId", { length: 64 })
-});
-var media = mysqlTable("media", {
-  id: varchar("id", { length: 64 }).primaryKey(),
-  filename: varchar("filename", { length: 255 }).notNull(),
-  fileType: mysqlEnum("fileType", ["image", "video", "document"]).notNull(),
-  contentType: varchar("contentType", { length: 100 }).notNull(),
-  size: int("size").notNull(),
-  storageKey: varchar("storageKey", { length: 500 }).notNull(),
-  url: text("url").notNull(),
-  thumbnail: text("thumbnail"),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow(),
-  userId: varchar("userId", { length: 64 })
+import {
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+  int
+} from "drizzle-orm/mysql-core";
+var users, adminCredentials, posts, reviews, media;
+var init_schema = __esm({
+  "drizzle/schema.ts"() {
+    "use strict";
+    users = mysqlTable("users", {
+      id: varchar("id", { length: 64 }).primaryKey(),
+      name: text("name"),
+      email: varchar("email", { length: 320 }),
+      loginMethod: varchar("loginMethod", { length: 64 }),
+      role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+      createdAt: timestamp("createdAt").defaultNow(),
+      lastSignedIn: timestamp("lastSignedIn").defaultNow()
+    });
+    adminCredentials = mysqlTable("adminCredentials", {
+      id: varchar("id", { length: 64 }).primaryKey(),
+      email: varchar("email", { length: 320 }).notNull().unique(),
+      passwordHash: text("passwordHash").notNull(),
+      name: text("name"),
+      createdAt: timestamp("createdAt").defaultNow(),
+      lastLogin: timestamp("lastLogin")
+    });
+    posts = mysqlTable("posts", {
+      id: varchar("id", { length: 64 }).primaryKey(),
+      slug: varchar("slug", { length: 255 }).notNull().unique(),
+      title: text("title").notNull(),
+      excerpt: text("excerpt"),
+      content: text("content").notNull(),
+      coverImage: text("coverImage"),
+      category: varchar("category", { length: 100 }).notNull(),
+      featured: mysqlEnum("featured", ["yes", "no"]).default("no").notNull(),
+      publishedAt: timestamp("publishedAt").defaultNow(),
+      updatedAt: timestamp("updatedAt").defaultNow(),
+      authorId: varchar("authorId", { length: 64 })
+    });
+    reviews = mysqlTable("reviews", {
+      id: varchar("id", { length: 64 }).primaryKey(),
+      type: mysqlEnum("type", ["film", "album", "book"]).notNull(),
+      title: text("title").notNull(),
+      creator: text("creator"),
+      year: int("year"),
+      rating: int("rating").notNull(),
+      notes: text("notes"),
+      tags: text("tags"),
+      coverImage: text("coverImage"),
+      apiId: varchar("apiId", { length: 255 }),
+      metadata: text("metadata"),
+      createdAt: timestamp("createdAt").defaultNow(),
+      updatedAt: timestamp("updatedAt").defaultNow(),
+      userId: varchar("userId", { length: 64 })
+    });
+    media = mysqlTable("media", {
+      id: varchar("id", { length: 64 }).primaryKey(),
+      filename: varchar("filename", { length: 255 }).notNull(),
+      fileType: mysqlEnum("fileType", ["image", "video", "document"]).notNull(),
+      contentType: varchar("contentType", { length: 100 }).notNull(),
+      size: int("size").notNull(),
+      storageKey: varchar("storageKey", { length: 500 }).notNull(),
+      url: text("url").notNull(),
+      thumbnail: text("thumbnail"),
+      createdAt: timestamp("createdAt").defaultNow(),
+      updatedAt: timestamp("updatedAt").defaultNow(),
+      userId: varchar("userId", { length: 64 })
+    });
+  }
 });
 
 // server/_core/env.ts
-var ENV = {
-  appId: process.env.VITE_APP_ID ?? "",
-  cookieSecret: process.env.JWT_SECRET ?? "",
-  databaseUrl: process.env.DATABASE_URL ?? "",
-  oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
-  ownerId: process.env.OWNER_OPEN_ID ?? "",
-  isProduction: process.env.NODE_ENV === "production",
-  forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
-  forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? ""
-};
+var ENV;
+var init_env = __esm({
+  "server/_core/env.ts"() {
+    "use strict";
+    ENV = {
+      appId: process.env.VITE_APP_ID ?? "",
+      cookieSecret: process.env.JWT_SECRET ?? "",
+      databaseUrl: process.env.DATABASE_URL ?? "",
+      oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
+      ownerId: process.env.OWNER_OPEN_ID ?? "",
+      isProduction: process.env.NODE_ENV === "production",
+      forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
+      forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? ""
+    };
+  }
+});
 
 // server/db.ts
-var _db = null;
+var db_exports = {};
+__export(db_exports, {
+  checkDatabaseConnection: () => checkDatabaseConnection,
+  getDb: () => getDb,
+  getUser: () => getUser,
+  upsertUser: () => upsertUser
+});
+import { eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
-    try {
-      _db = drizzle(process.env.DATABASE_URL);
-    } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
-      _db = null;
-    }
+  if (_db) {
+    return _db;
   }
-  return _db;
+  if (!process.env.DATABASE_URL) {
+    console.error("[Database] DATABASE_URL environment variable is not set");
+    return null;
+  }
+  try {
+    _connection = await mysql.createConnection({
+      uri: process.env.DATABASE_URL,
+      connectTimeout: 1e4,
+      // 10 seconds
+      // Connection pool settings for production
+      ...process.env.NODE_ENV === "production" ? {
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+      } : {}
+    });
+    await _connection.ping();
+    _db = drizzle(_connection);
+    _connectionAttempts = 0;
+    console.log("[Database] Successfully connected to MySQL");
+    return _db;
+  } catch (error) {
+    _connectionAttempts++;
+    console.error(
+      `[Database] Failed to connect (attempt ${_connectionAttempts}/${MAX_CONNECTION_ATTEMPTS}):`,
+      error
+    );
+    _db = null;
+    if (_connection) {
+      try {
+        await _connection.end();
+      } catch (endError) {
+        console.error("[Database] Error closing failed connection:", endError);
+      }
+    }
+    _connection = null;
+    if (process.env.NODE_ENV === "production" && _connectionAttempts < MAX_CONNECTION_ATTEMPTS) {
+      console.log(
+        `[Database] Will retry connection in ${RETRY_DELAY_MS / 1e3} seconds...`
+      );
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+      return getDb();
+    } else if (_connectionAttempts >= MAX_CONNECTION_ATTEMPTS) {
+      console.error(
+        `[Database] Maximum connection attempts (${MAX_CONNECTION_ATTEMPTS}) reached. Giving up.`
+      );
+    }
+    return null;
+  }
+}
+async function checkDatabaseConnection() {
+  try {
+    const db = await getDb();
+    if (!db) return false;
+    await _connection?.query("SELECT 1");
+    return true;
+  } catch (error) {
+    console.error("[Database] Health check failed:", error);
+    return false;
+  }
 }
 async function upsertUser(user) {
   if (!user.id) {
@@ -148,6 +222,48 @@ async function upsertUser(user) {
     throw error;
   }
 }
+async function getUser(id) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return void 0;
+  }
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : void 0;
+}
+var _db, _connection, _connectionAttempts, MAX_CONNECTION_ATTEMPTS, RETRY_DELAY_MS;
+var init_db = __esm({
+  "server/db.ts"() {
+    "use strict";
+    init_schema();
+    init_env();
+    _db = null;
+    _connection = null;
+    _connectionAttempts = 0;
+    MAX_CONNECTION_ATTEMPTS = 10;
+    RETRY_DELAY_MS = 5e3;
+  }
+});
+
+// server/_core/index.ts
+import "dotenv/config";
+import express2 from "express";
+import { createServer } from "http";
+import net from "net";
+import path from "path";
+import { fileURLToPath } from "url";
+import { createExpressMiddleware } from "@trpc/server/adapters/express";
+
+// shared/const.ts
+var UNAUTHED_ERR_MSG = "UNAUTHORIZED";
+var API_URL = process.env.VITE_API_URL || "/api";
+var NOT_ADMIN_ERR_MSG = "Not an admin";
+var COOKIE_NAME = "session";
+var ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1e3;
+var MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+// server/_core/oauth.ts
+init_db();
 
 // server/_core/cookies.ts
 function isSecureRequest(req) {
@@ -204,7 +320,10 @@ function registerOAuthRoutes(app) {
         expiresInMs: ONE_YEAR_MS
       });
       const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      res.cookie(COOKIE_NAME, sessionToken, {
+        ...cookieOptions,
+        maxAge: ONE_YEAR_MS
+      });
       res.redirect(302, "/");
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
@@ -284,6 +403,8 @@ import { TRPCError as TRPCError2 } from "@trpc/server";
 import { z as z2 } from "zod";
 
 // server/auth.ts
+init_schema();
+init_db();
 import { eq as eq2 } from "drizzle-orm";
 import * as crypto from "crypto";
 function hashPassword(password) {
@@ -295,7 +416,9 @@ function verifyPassword(password, hash) {
 async function verifyAdminLogin(email, password) {
   const db = await getDb();
   if (!db) {
-    console.warn("[Database] Cannot verify admin login: database not available");
+    console.warn(
+      "[Database] Cannot verify admin login: database not available"
+    );
     return null;
   }
   try {
@@ -317,7 +440,9 @@ async function verifyAdminLogin(email, password) {
 async function updateAdminPassword(email, newPassword) {
   const db = await getDb();
   if (!db) {
-    console.warn("[Database] Cannot update admin password: database not available");
+    console.warn(
+      "[Database] Cannot update admin password: database not available"
+    );
     return false;
   }
   try {
@@ -332,7 +457,9 @@ async function updateAdminPassword(email, newPassword) {
 async function updateAdminEmail(oldEmail, newEmail) {
   const db = await getDb();
   if (!db) {
-    console.warn("[Database] Cannot update admin email: database not available");
+    console.warn(
+      "[Database] Cannot update admin email: database not available"
+    );
     return false;
   }
   try {
@@ -345,6 +472,7 @@ async function updateAdminEmail(oldEmail, newEmail) {
 }
 
 // server/adminRouter.ts
+init_env();
 import * as jwt from "jose";
 var ADMIN_SESSION_COOKIE = "admin_session";
 var adminRouter = router({
@@ -413,7 +541,10 @@ var adminRouter = router({
     if (!token) {
       throw new TRPCError2({ code: "UNAUTHORIZED" });
     }
-    const success = await updateAdminEmail(input.currentEmail, input.newEmail);
+    const success = await updateAdminEmail(
+      input.currentEmail,
+      input.newEmail
+    );
     if (!success) {
       throw new TRPCError2({
         code: "INTERNAL_SERVER_ERROR",
@@ -445,6 +576,8 @@ var adminRouter = router({
 
 // server/reviewsRouter.ts
 import { z as z3 } from "zod";
+init_db();
+init_schema();
 import { eq as eq3, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
 var reviewsRouter = router({
@@ -462,11 +595,17 @@ var reviewsRouter = router({
       query = query.where(eq3(reviews.type, input.type));
     }
     if (input.sortBy === "date") {
-      query = query.orderBy(input.order === "desc" ? desc(reviews.createdAt) : reviews.createdAt);
+      query = query.orderBy(
+        input.order === "desc" ? desc(reviews.createdAt) : reviews.createdAt
+      );
     } else if (input.sortBy === "rating") {
-      query = query.orderBy(input.order === "desc" ? desc(reviews.rating) : reviews.rating);
+      query = query.orderBy(
+        input.order === "desc" ? desc(reviews.rating) : reviews.rating
+      );
     } else if (input.sortBy === "title") {
-      query = query.orderBy(input.order === "desc" ? desc(reviews.title) : reviews.title);
+      query = query.orderBy(
+        input.order === "desc" ? desc(reviews.title) : reviews.title
+      );
     }
     const allReviews = await query;
     return allReviews;
@@ -544,7 +683,13 @@ var reviewsRouter = router({
   }),
   stats: protectedProcedure.query(async () => {
     const db = await getDb();
-    if (!db) return { total: 0, byType: { film: 0, album: 0, book: 0 }, averageRating: 0, topRated: [] };
+    if (!db)
+      return {
+        total: 0,
+        byType: { film: 0, album: 0, book: 0 },
+        averageRating: 0,
+        topRated: []
+      };
     const allReviews = await db.select().from(reviews);
     const stats = {
       total: allReviews.length,
@@ -554,7 +699,9 @@ var reviewsRouter = router({
         book: allReviews.filter((r) => r.type === "book").length
       },
       averageRating: allReviews.length ? allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length : 0,
-      topRated: allReviews.filter((r) => r.rating === 5).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
+      topRated: allReviews.filter((r) => r.rating === 5).sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ).slice(0, 10)
     };
     return stats;
   })
@@ -563,6 +710,8 @@ var reviewsRouter = router({
 // server/postsRouter.ts
 import { TRPCError as TRPCError3 } from "@trpc/server";
 import { z as z4 } from "zod";
+init_db();
+init_schema();
 import { eq as eq4 } from "drizzle-orm";
 import { nanoid as nanoid2 } from "nanoid";
 var postsRouter = router({
@@ -698,11 +847,14 @@ var postsRouter = router({
 import { z as z5 } from "zod";
 
 // server/storage.ts
+init_env();
 function getStorageConfig() {
   const baseUrl = ENV.forgeApiUrl;
   const apiKey = ENV.forgeApiKey;
   if (!baseUrl || !apiKey) {
-    throw new Error("Storage proxy credentials missing: set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY");
+    throw new Error(
+      "Storage proxy credentials missing: set BUILT_IN_FORGE_API_URL and BUILT_IN_FORGE_API_KEY"
+    );
   }
   return { baseUrl: baseUrl.replace(/\/+$/, ""), apiKey };
 }
@@ -712,7 +864,10 @@ function buildUploadUrl(baseUrl, relKey) {
   return url;
 }
 async function buildDownloadUrl(baseUrl, relKey, apiKey) {
-  const downloadApiUrl = new URL("v1/storage/downloadUrl", ensureTrailingSlash(baseUrl));
+  const downloadApiUrl = new URL(
+    "v1/storage/downloadUrl",
+    ensureTrailingSlash(baseUrl)
+  );
   downloadApiUrl.searchParams.set("path", normalizeKey(relKey));
   const response = await fetch(downloadApiUrl, {
     method: "GET",
@@ -747,7 +902,9 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
   });
   if (!response.ok) {
     const message = await response.text().catch(() => response.statusText);
-    throw new Error(`Storage upload failed (${response.status} ${response.statusText}): ${message}`);
+    throw new Error(
+      `Storage upload failed (${response.status} ${response.statusText}): ${message}`
+    );
   }
   const url = (await response.json()).url;
   return { key, url };
@@ -784,6 +941,8 @@ var uploadRouter = router({
 });
 
 // server/mediaRouter.ts
+init_db();
+init_schema();
 import { z as z6 } from "zod";
 import { eq as eq5 } from "drizzle-orm";
 var mediaRouter = router({
@@ -855,11 +1014,18 @@ async function setupVite(app) {
   app.use(vite.middlewares);
   return vite;
 }
-function serveStatic(app, distPath) {
-  app.use(express.static(distPath));
-}
 
 // server/_core/index.ts
+import { ChatOllama } from "@langchain/community/chat_models/ollama";
+import { ChatPromptTemplate } from "langchain/prompts";
+import { RunnableSequence } from "langchain/runnables";
+var model = new ChatOllama({ model: "gemma3:1b" });
+var prompt = ChatPromptTemplate.fromMessages([
+  ["system", "Voc\xEA \xE9 um assistente direto e claro."],
+  ["human", "{mensagem}"]
+]);
+var chain = RunnableSequence.from([prompt, model]);
+var __dirname = path.dirname(fileURLToPath(import.meta.url));
 function isPortAvailable(port) {
   return new Promise((resolve) => {
     const server = net.createServer();
@@ -871,9 +1037,7 @@ function isPortAvailable(port) {
 }
 async function findAvailablePort(startPort = 3e3) {
   for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
+    if (await isPortAvailable(port)) return port;
   }
   throw new Error(`No available port found starting from ${startPort}`);
 }
@@ -883,8 +1047,36 @@ async function startServer() {
   app.use(express2.json({ limit: "50mb" }));
   app.use(express2.urlencoded({ limit: "50mb", extended: true }));
   registerOAuthRoutes(app);
-  app.get("/health", (req, res) => {
-    res.status(200).json({ status: "ok", timestamp: (/* @__PURE__ */ new Date()).toISOString() });
+  app.get("/health", async (_req, res) => {
+    try {
+      const { checkDatabaseConnection: checkDatabaseConnection2 } = await Promise.resolve().then(() => (init_db(), db_exports));
+      const isDatabaseConnected = await checkDatabaseConnection2();
+      if (isDatabaseConnected) {
+        res.status(200).json({
+          status: "ok",
+          database: "connected",
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          environment: process.env.NODE_ENV
+        });
+      } else {
+        res.status(503).json({
+          status: "error",
+          database: "disconnected",
+          timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+          message: "Database connection failed"
+        });
+      }
+    } catch (error) {
+      console.error("[Health Check] Error:", error);
+      res.status(500).json({
+        status: "error",
+        message: "Health check failed",
+        timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      });
+    }
+  });
+  app.get("/", (req, res) => {
+    res.status(200).send("Vinipim Portfolio API is running");
   });
   app.use(
     "/api/trpc",
@@ -893,20 +1085,28 @@ async function startServer() {
       createContext
     })
   );
-  if (process.env.NODE_ENV === "development") {
+  app.get("/api/chat", async (req, res) => {
+    const q = String(req.query.q || "");
+    try {
+      const resposta = await chain.invoke({ mensagem: q });
+      res.json({ resposta: resposta.content });
+    } catch (e) {
+      console.error("Erro no LangChain:", e);
+      res.status(500).json({ erro: "Falha no modelo local" });
+    }
+  });
+  const env = process.env.NODE_ENV || "development";
+  if (env === "development") {
     await setupVite(app, server);
-  } else {
-    serveStatic(app);
   }
-  const port = Number.parseInt(process.env.PORT || "3000");
-  const finalPort = process.env.NODE_ENV === "production" ? port : await findAvailablePort(port);
-  if (finalPort !== port && process.env.NODE_ENV !== "production") {
-    console.log(`Port ${port} is busy, using port ${finalPort} instead`);
-  }
+  const port = parseInt(process.env.PORT || "3000", 10);
+  const finalPort = env === "production" ? port : await findAvailablePort(port);
   server.listen(finalPort, "0.0.0.0", () => {
     console.log(`\u2705 Server running on port ${finalPort}`);
-    console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-    console.log(`Database: ${process.env.DATABASE_URL ? "Connected" : "Not configured"}`);
+    console.log(`Environment: ${env}`);
+    console.log(
+      `Database: ${process.env.DATABASE_URL ? "Connected" : "Not configured"}`
+    );
   });
 }
 startServer().catch(console.error);

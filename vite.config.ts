@@ -5,17 +5,12 @@ import path from "path";
 import { defineConfig } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
-<<<<<<< HEAD
 const plugins = [
   react(),
   tailwindcss(),
   jsxLocPlugin(),
   vitePluginManusRuntime(),
-];
-=======
-// plugins de build
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime()]
->>>>>>> 7fd43ae83b63db3cb28e177a5f07135d563dea81
+]
 
 export default defineConfig({
   plugins,
