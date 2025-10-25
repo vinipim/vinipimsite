@@ -40,7 +40,13 @@ app.use((req, res, next) => {
   if (req.method === 'GET') {
     const filePath = path.join(process.cwd(), 'dist', 'index.html');
     console.log("📄 Serving index.html from:", filePath);
-    res.sendFile(filePath);
+    console.log("Index.html exists:", fs.existsSync(filePath));
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        res.status(500).send('Internal Server Error');
+      }
+    });
   } else {
     next();
   }
@@ -55,4 +61,15 @@ console.log("🎯 Port:", port);
 server.listen(port, "0.0.0.0", () => {
   console.log(`✅ Server running on port ${port}`);
   console.log(`🚀 Health check: http://localhost:${port}/health`);
+});
+
+// Global error handlers
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
