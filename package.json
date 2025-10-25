@@ -21,6 +21,7 @@
     "@trpc/react-query": "latest",
     "@trpc/server": "latest",
     "@tanstack/react-query": "latest",
+    "dotenv": "latest",
     "drizzle-orm": "latest",
     "express": "latest",
     "mysql2": "^3.15.0",
