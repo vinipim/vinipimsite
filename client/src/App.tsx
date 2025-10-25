@@ -1,26 +1,26 @@
-import { Toaster } from "@/components/ui/sonner"
-import { TooltipProvider } from "@/components/ui/tooltip"
-import NotFound from "@/pages/NotFound"
-import { Route, Switch } from "wouter"
-import ErrorBoundary from "./components/ErrorBoundary"
-import { ThemeProvider } from "./contexts/ThemeContext"
-import Home from "./pages/Home"
-import About from "./pages/About"
-import Posts from "./pages/Posts"
-import PostDetail from "./pages/PostDetail"
-import Archive from "./pages/Archive"
-import Contact from "./pages/Contact"
-import AdminLogin from "./pages/AdminLogin"
-import AdminDashboard from "./pages/AdminDashboard"
-import AdminPostEditor from "./pages/AdminPostEditor"
-import AdminReviewEditor from "./pages/AdminReviewEditor"
-import Books from "./pages/Books"
-import Films from "./pages/Films"
-import Audio from "./pages/Audio"
-import Video from "./pages/Video"
-import { QueryClientProvider, QueryClient } from "react-query"
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NotFound from "@/pages/NotFound";
+import { Route, Switch } from "wouter";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Posts from "./pages/Posts";
+import PostDetail from "./pages/PostDetail";
+import Archive from "./pages/Archive";
+import Contact from "./pages/Contact";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminPostEditor from "./pages/AdminPostEditor";
+import AdminReviewEditor from "./pages/AdminReviewEditor";
+import Books from "./pages/Books";
+import Films from "./pages/Films";
+import Audio from "./pages/Audio";
+import Video from "./pages/Video";
+import { QueryClientProvider, QueryClient } from "react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 function Router() {
   return (
@@ -43,7 +43,7 @@ function Router() {
       <Route path="/video" component={Video} />
       <Route component={NotFound} />
     </Switch>
-  )
+  );
 }
 
 function App() {
@@ -58,7 +58,7 @@ function App() {
         </QueryClientProvider>
       </ErrorBoundary>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,21 +1,10 @@
 [build]
 builder = "nixpacks"
+builderCommand = "pnpm install && pnpm build"
 
 [deploy]
-startCommand = "pnpm start"
+startCommand = "node dist/index.js"
 restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10
+restartPolicyMaxRetries = 3
 healthcheckPath = "/health"
-healthcheckTimeout = 300
-
-[nixpacks]
-# Ensure pnpm is used
-providers = ["node"]
-
-# Custom setup commands
-[nixpacks.setup]
-cmds = ["echo 'Setting up environment...'"]
-
-# Post-deploy hooks
-[deploy.hooks]
-postDeploy = "pnpm db:setup"
+healthcheckTimeout = 60

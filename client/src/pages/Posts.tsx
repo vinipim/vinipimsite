@@ -1,8 +1,8 @@
-import { trpc } from "../trpc"
-import { Link } from "react-router-dom"
+import { trpc } from "../trpc";
+import { Link } from "react-router-dom";
 
 export default function Posts() {
-  const { data: posts } = trpc.posts.getAll.useQuery()
+  const { data: posts } = trpc.posts.getAll.useQuery();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -20,5 +20,5 @@ export default function Posts() {
         ))}
       </div>
     </div>
-  )
+  );
 }

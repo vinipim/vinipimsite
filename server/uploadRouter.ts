@@ -1,6 +1,6 @@
-import { router, protectedProcedure } from "./_core/trpc"
-import { z } from "zod"
-import { storage } from "./storage"
+import { router, protectedProcedure } from "./_core/trpc";
+import { z } from "zod";
+import { storage } from "./storage";
 
 export const uploadRouter = router({
   getUploadUrl: protectedProcedure
@@ -11,7 +11,7 @@ export const uploadRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      const url = await storage.getUploadUrl(input.filename, input.contentType)
-      return { url }
+      const url = await storage.getUploadUrl(input.filename, input.contentType);
+      return { url };
     }),
-})
+});

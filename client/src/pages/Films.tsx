@@ -1,7 +1,7 @@
-import { trpc } from "../trpc"
+import { trpc } from "../trpc";
 
 export default function Films() {
-  const { data: reviews } = trpc.reviews.getByType.useQuery({ type: "film" })
+  const { data: reviews } = trpc.reviews.getByType.useQuery({ type: "film" });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -15,5 +15,5 @@ export default function Films() {
         ))}
       </div>
     </div>
-  )
+  );
 }

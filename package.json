@@ -9,11 +9,12 @@
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "db:setup": "tsx scripts/setup-database.ts",
     "create:admin": "tsx scripts/create-admin.ts",
-    "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
+    "dev": "cross-env NODE_ENV=development tsx watch server/_core/index.ts",
     "format": "prettier --write .",
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start:dev": "cross-env NODE_ENV=development node dist/index.js",
     "test": "vitest run",
-    "deploy:prepare": "npm run db:setup && npm run create:admin"
+    "deploy:prepare": "pnpm db:setup && pnpm create:admin"
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "latest",
@@ -144,7 +145,8 @@
     "typescript": "^5",
     "vite": "^7.1.7",
     "vite-plugin-manus-runtime": "^0.0.42",
-    "vitest": "^2.1.4"
+    "vitest": "^2.1.4",
+    "cross-env": "^7.0.3"
   },
   "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af"
 }

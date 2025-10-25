@@ -1,7 +1,7 @@
-import { trpc } from "../trpc"
+import { trpc } from "../trpc";
 
 export default function Archive() {
-  const { data: posts } = trpc.posts.getAll.useQuery()
+  const { data: posts } = trpc.posts.getAll.useQuery();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -9,12 +9,15 @@ export default function Archive() {
       <ul className="space-y-2">
         {posts?.map((post) => (
           <li key={post.id}>
-            <a href={`/posts/${post.slug}`} className="text-blue-600 hover:underline">
+            <a
+              href={`/posts/${post.slug}`}
+              className="text-blue-600 hover:underline"
+            >
               {post.title}
             </a>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }

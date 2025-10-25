@@ -1,10 +1,10 @@
-import { TRPCError } from "@trpc/server"
-import { z } from "zod"
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc"
-import { getDb } from "./db"
-import { posts } from "../drizzle/schema"
-import { eq } from "drizzle-orm"
-import { nanoid } from "nanoid"
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { getDb } from "./db";
+import { posts } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
+import { nanoid } from "nanoid";
 
 /**
  * Posts router for blog content management
@@ -14,40 +14,45 @@ export const postsRouter = router({
    * Get all posts (public)
    */
   getAll: publicProcedure.query(async () => {
-    const db = await getDb()
+    const db = await getDb();
     if (!db) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Database not available",
-      })
+      });
     }
 
-    const allPosts = await db.select().from(posts).orderBy(posts.publishedAt)
-    return allPosts
+    const allPosts = await db.select().from(posts).orderBy(posts.publishedAt);
+    return allPosts;
   }),
 
   /**
    * Get post by slug (public)
    */
-  getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
-    const db = await getDb()
-    if (!db) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Database not available",
-      })
-    }
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
+      }
 
-    const [post] = await db.select().from(posts).where(eq(posts.slug, input.slug))
-    if (!post) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Post not found",
-      })
-    }
+      const [post] = await db
+        .select()
+        .from(posts)
+        .where(eq(posts.slug, input.slug));
+      if (!post) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post not found",
+        });
+      }
 
-    return post
-  }),
+      return post;
+    }),
 
   /**
    * Create new post (admin only)
@@ -65,31 +70,31 @@ export const postsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const db = await getDb()
+      const db = await getDb();
       if (!db) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Database not available",
-        })
+        });
       }
 
       if (ctx.user?.role !== "admin") {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Admin access required",
-        })
+        });
       }
 
-      const id = nanoid()
+      const id = nanoid();
       await db.insert(posts).values({
         id,
         ...input,
         authorId: ctx.user.id,
         publishedAt: new Date(),
         updatedAt: new Date(),
-      })
+      });
 
-      return { success: true, id }
+      return { success: true, id };
     }),
 
   /**
@@ -109,54 +114,56 @@ export const postsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const db = await getDb()
+      const db = await getDb();
       if (!db) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Database not available",
-        })
+        });
       }
 
       if (ctx.user?.role !== "admin") {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Admin access required",
-        })
+        });
       }
 
-      const { id, ...updateData } = input
+      const { id, ...updateData } = input;
       await db
         .update(posts)
         .set({
           ...updateData,
           updatedAt: new Date(),
         })
-        .where(eq(posts.id, id))
+        .where(eq(posts.id, id));
 
-      return { success: true }
+      return { success: true };
     }),
 
   /**
    * Delete post (admin only)
    */
-  delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const db = await getDb()
-    if (!db) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Database not available",
-      })
-    }
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Database not available",
+        });
+      }
 
-    if (ctx.user?.role !== "admin") {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Admin access required",
-      })
-    }
+      if (ctx.user?.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Admin access required",
+        });
+      }
 
-    await db.delete(posts).where(eq(posts.id, input.id))
+      await db.delete(posts).where(eq(posts.id, input.id));
 
-    return { success: true }
-  }),
-})
+      return { success: true };
+    }),
+});

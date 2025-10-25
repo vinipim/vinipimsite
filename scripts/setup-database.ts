@@ -1,7 +1,13 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import { adminCredentials, media, posts, reviews, users } from "../drizzle/schema";
+import {
+  adminCredentials,
+  media,
+  posts,
+  reviews,
+  users,
+} from "../drizzle/schema";
 
 // Configuration
 const MAX_RETRY_ATTEMPTS = 5;
@@ -17,30 +23,35 @@ async function connectWithRetry(attempt = 1): Promise<mysql.Connection> {
   }
 
   try {
-    console.log(`Connecting to database (attempt ${attempt}/${MAX_RETRY_ATTEMPTS})...`);
-    
+    console.log(
+      `Connecting to database (attempt ${attempt}/${MAX_RETRY_ATTEMPTS})...`,
+    );
+
     // Create a connection with timeout
     const connection = await mysql.createConnection({
       uri: process.env.DATABASE_URL,
       connectTimeout: 10000, // 10 seconds
     });
-    
+
     // Test the connection
     await connection.ping();
     console.log("✅ Database connection successful");
-    
+
     return connection;
   } catch (error) {
-    console.error(`❌ Failed to connect to database (attempt ${attempt}/${MAX_RETRY_ATTEMPTS}):`, error);
-    
+    console.error(
+      `❌ Failed to connect to database (attempt ${attempt}/${MAX_RETRY_ATTEMPTS}):`,
+      error,
+    );
+
     if (attempt >= MAX_RETRY_ATTEMPTS) {
       console.error("Maximum retry attempts reached. Exiting.");
       process.exit(1);
     }
-    
-    console.log(`Retrying in ${RETRY_DELAY_MS/1000} seconds...`);
-    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
-    
+
+    console.log(`Retrying in ${RETRY_DELAY_MS / 1000} seconds...`);
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+
     // Recursive retry
     return connectWithRetry(attempt + 1);
   }
@@ -49,7 +60,11 @@ async function connectWithRetry(attempt = 1): Promise<mysql.Connection> {
 /**
  * Creates a table if it doesn't exist
  */
-async function createTable(connection: mysql.Connection, tableName: string, createStatement: string): Promise<void> {
+async function createTable(
+  connection: mysql.Connection,
+  tableName: string,
+  createStatement: string,
+): Promise<void> {
   try {
     await connection.execute(createStatement);
     console.log(`✅ ${tableName} table created/verified`);
@@ -64,18 +79,21 @@ async function createTable(connection: mysql.Connection, tableName: string, crea
  */
 async function setupDatabase() {
   console.log("🚀 Starting database setup for Railway deployment");
-  
+
   try {
     // Connect to the database with retry logic
     const connection = await connectWithRetry();
-    
+
     // Create Drizzle instance
     const db = drizzle(connection);
-    
+
     console.log("\n📊 Creating/verifying tables...");
-    
+
     // Users table
-    await createTable(connection, "Users", `
+    await createTable(
+      connection,
+      "Users",
+      `
       CREATE TABLE IF NOT EXISTS users (
         id VARCHAR(64) PRIMARY KEY,
         name TEXT,
@@ -85,10 +103,14 @@ async function setupDatabase() {
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         lastSignedIn TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `);
-    
+    `,
+    );
+
     // Admin credentials table
-    await createTable(connection, "Admin credentials", `
+    await createTable(
+      connection,
+      "Admin credentials",
+      `
       CREATE TABLE IF NOT EXISTS adminCredentials (
         id VARCHAR(64) PRIMARY KEY,
         email VARCHAR(320) NOT NULL UNIQUE,
@@ -97,10 +119,14 @@ async function setupDatabase() {
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         lastLogin TIMESTAMP
       )
-    `);
-    
+    `,
+    );
+
     // Posts table
-    await createTable(connection, "Posts", `
+    await createTable(
+      connection,
+      "Posts",
+      `
       CREATE TABLE IF NOT EXISTS posts (
         id VARCHAR(64) PRIMARY KEY,
         slug VARCHAR(255) NOT NULL UNIQUE,
@@ -114,10 +140,14 @@ async function setupDatabase() {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         authorId VARCHAR(64)
       )
-    `);
-    
+    `,
+    );
+
     // Reviews table
-    await createTable(connection, "Reviews", `
+    await createTable(
+      connection,
+      "Reviews",
+      `
       CREATE TABLE IF NOT EXISTS reviews (
         id VARCHAR(64) PRIMARY KEY,
         type ENUM('film', 'album', 'book') NOT NULL,
@@ -134,10 +164,14 @@ async function setupDatabase() {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         userId VARCHAR(64)
       )
-    `);
-    
+    `,
+    );
+
     // Media table
-    await createTable(connection, "Media", `
+    await createTable(
+      connection,
+      "Media",
+      `
       CREATE TABLE IF NOT EXISTS media (
         id VARCHAR(64) PRIMARY KEY,
         filename VARCHAR(255) NOT NULL,
@@ -151,10 +185,11 @@ async function setupDatabase() {
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         userId VARCHAR(64)
       )
-    `);
-    
+    `,
+    );
+
     console.log("\n✅ All tables created/verified successfully");
-    
+
     // Verify tables exist by counting them
     const [rows] = await connection.execute(`
       SELECT COUNT(*) as tableCount 
@@ -162,14 +197,16 @@ async function setupDatabase() {
       WHERE table_schema = DATABASE() 
       AND table_name IN ('users', 'adminCredentials', 'posts', 'reviews', 'media')
     `);
-    
+
     const tableCount = (rows as any)[0].tableCount;
     console.log(`📊 Verified ${tableCount}/5 tables exist in the database`);
-    
+
     // Close the connection
     await connection.end();
-    
-    console.log("\n🎉 Database setup complete and ready for Railway deployment");
+
+    console.log(
+      "\n🎉 Database setup complete and ready for Railway deployment",
+    );
   } catch (error) {
     console.error("\n❌ Fatal error setting up database:", error);
     process.exit(1);

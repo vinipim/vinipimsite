@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useParams } from "react-router-dom"
-import { trpc } from "../trpc"
+import { useParams } from "react-router-dom";
+import { trpc } from "../trpc";
 
 export default function PostDetail() {
-  const { slug } = useParams<{ slug: string }>()
-  const { data: post } = trpc.posts.getBySlug.useQuery({ slug: slug! })
+  const { slug } = useParams<{ slug: string }>();
+  const { data: post } = trpc.posts.getBySlug.useQuery({ slug: slug! });
 
-  if (!post) return <div>Loading...</div>
+  if (!post) return <div>Loading...</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -16,5 +16,5 @@ export default function PostDetail() {
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
     </div>
-  )
+  );
 }

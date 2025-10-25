@@ -1,7 +1,7 @@
-import { trpc } from "../trpc"
+import { trpc } from "../trpc";
 
 export default function Home() {
-  const { data: posts } = trpc.posts.getAll.useQuery()
+  const { data: posts } = trpc.posts.getAll.useQuery();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -15,5 +15,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -4,5 +4,5 @@ export default function Audio() {
       <h1 className="text-4xl font-bold mb-8">Audio</h1>
       <p>Audio content coming soon...</p>
     </div>
-  )
+  );
 }

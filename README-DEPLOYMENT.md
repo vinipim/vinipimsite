@@ -71,11 +71,13 @@ This guide provides step-by-step instructions for deploying your Vinipim Portfol
 ## Troubleshooting
 
 ### Database Connection Issues
+
 - Verify that the DATABASE_URL environment variable is correctly set
 - Make sure the MySQL service is running
 - Try running `pnpm db:push` again
 
 ### Admin Login Issues
+
 - If you can't log in, try creating a new admin account:
   ```bash
   tsx scripts/create-admin.ts
@@ -92,6 +94,7 @@ This guide provides step-by-step instructions for deploying your Vinipim Portfol
   ```
 
 ### Deployment Failures
+
 - Check the build logs for specific errors
 - Verify that all dependencies are in package.json
 - Make sure the environment variables are correctly set
@@ -99,6 +102,7 @@ This guide provides step-by-step instructions for deploying your Vinipim Portfol
 ## Updating Your Application
 
 To update your application after making changes:
+
 1. Push your changes to GitHub
 2. Railway will automatically redeploy your application
 3. No additional steps are needed unless you've made database schema changes

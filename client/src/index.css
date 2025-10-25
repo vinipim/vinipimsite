@@ -32,8 +32,12 @@
   --input: oklch(0.85 0.01 240);
   --ring: oklch(0.55 0.18 60);
 
-  --font-serif: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
-  --font-sans: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font-serif:
+    "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue",
+    Arial, sans-serif;
+  --font-sans:
+    "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue",
+    Arial, sans-serif;
 }
 
 @layer base {

@@ -1,34 +1,39 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { trpc } from "../trpc"
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { trpc } from "../trpc";
 
 export default function AdminPostEditor() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [slug, setSlug] = useState("")
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [slug, setSlug] = useState("");
 
-  const createMutation = trpc.posts.create.useMutation()
-  const updateMutation = trpc.posts.update.useMutation()
+  const createMutation = trpc.posts.create.useMutation();
+  const updateMutation = trpc.posts.update.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (id) {
-        await updateMutation.mutateAsync({ id: Number.parseInt(id), title, content, slug })
+        await updateMutation.mutateAsync({
+          id: Number.parseInt(id),
+          title,
+          content,
+          slug,
+        });
       } else {
-        await createMutation.mutateAsync({ title, content, slug })
+        await createMutation.mutateAsync({ title, content, slug });
       }
-      navigate("/admin/dashboard")
+      navigate("/admin/dashboard");
     } catch (error) {
-      alert("Failed to save post")
+      alert("Failed to save post");
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -55,10 +60,13 @@ export default function AdminPostEditor() {
           rows={15}
           className="w-full border rounded px-4 py-2"
         />
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded"
+        >
           Save
         </button>
       </form>
     </div>
-  )
+  );
 }

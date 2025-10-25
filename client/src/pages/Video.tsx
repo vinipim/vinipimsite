@@ -4,5 +4,5 @@ export default function Video() {
       <h1 className="text-4xl font-bold mb-8">Video</h1>
       <p>Video content coming soon...</p>
     </div>
-  )
+  );
 }

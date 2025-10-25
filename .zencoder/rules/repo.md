@@ -6,9 +6,11 @@ alwaysApply: true
 # Vinipim Portfolio Search Information
 
 ## Summary
+
 A full-stack portfolio website built with Express, Vite, React, and tRPC. The application features a blog system, media management, and review capabilities for films, albums, and books. It's designed to be deployed on Railway or Vercel with a MySQL database.
 
 ## Structure
+
 - **app/**: Next.js application files
 - **client/**: React frontend application using Vite
 - **components/**: Shared UI components using Radix UI
@@ -21,13 +23,16 @@ A full-stack portfolio website built with Express, Vite, React, and tRPC. The ap
 - **styles/**: Global CSS styles
 
 ## Language & Runtime
+
 **Language**: TypeScript
 **Version**: TypeScript 5+
 **Build System**: Vite 7.1.7 for client, esbuild for server
 **Package Manager**: pnpm 10.4.1+
 
 ## Dependencies
+
 **Main Dependencies**:
+
 - React 19.1.1 with React DOM
 - Express for server
 - tRPC for type-safe API
@@ -39,6 +44,7 @@ A full-stack portfolio website built with Express, Vite, React, and tRPC. The ap
 - Zod 4.1.12 for validation
 
 **Development Dependencies**:
+
 - Vite 7.1.7
 - TypeScript 5+
 - Vitest 2.1.4 for testing
@@ -47,6 +53,7 @@ A full-stack portfolio website built with Express, Vite, React, and tRPC. The ap
 - Drizzle Kit 0.31.4
 
 ## Build & Installation
+
 ```bash
 # Install dependencies
 pnpm install
@@ -71,7 +78,9 @@ pnpm start
 ```
 
 ## Docker
+
 **Configuration**: Uses Nixpacks for containerization with Node.js 20 and pnpm.
+
 ```json
 {
   "phases": {
@@ -92,6 +101,7 @@ pnpm start
 ```
 
 ## Database
+
 **ORM**: Drizzle ORM
 **Dialect**: MySQL
 **Schema**: Includes tables for users, admin credentials, posts, reviews, and media
@@ -99,16 +109,20 @@ pnpm start
 **Setup Command**: `pnpm db:setup`
 
 ## Testing
+
 **Framework**: Vitest
 **Run Command**:
+
 ```bash
 pnpm test
 ```
 
 ## Deployment
+
 **Recommended Platform**: Railway
 **Alternative**: Vercel
 **Environment Variables**:
+
 - `DATABASE_URL`: MySQL connection string
 - `JWT_SECRET`: Secret for JWT tokens
 - `NODE_ENV=production`
@@ -116,11 +130,13 @@ pnpm test
 - `AWS_REGION`: AWS region for S3
 
 **Railway Configuration**:
+
 - Uses railway.toml for deployment configuration
 - Automatic build and deployment with GitHub integration
 - Health check endpoint at `/health`
 
 **Vercel Configuration**:
+
 - Custom build settings in vercel.json
 - Build Command: `pnpm build`
 - Output Directory: `dist/public`

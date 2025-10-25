@@ -1,12 +1,16 @@
-import { TRPCError } from "@trpc/server"
-import { z } from "zod"
-import { publicProcedure, router } from "./_core/trpc"
-import { verifyAdminLogin, updateAdminEmail, updateAdminPassword } from "./auth"
-import { getSessionCookieOptions } from "./_core/cookies"
-import * as jwt from "jose"
-import { ENV } from "./_core/env"
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { publicProcedure, router } from "./_core/trpc";
+import {
+  verifyAdminLogin,
+  updateAdminEmail,
+  updateAdminPassword,
+} from "./auth";
+import { getSessionCookieOptions } from "./_core/cookies";
+import * as jwt from "jose";
+import { ENV } from "./_core/env";
 
-const ADMIN_SESSION_COOKIE = "admin_session"
+const ADMIN_SESSION_COOKIE = "admin_session";
 
 export const adminRouter = router({
   login: publicProcedure
@@ -17,15 +21,15 @@ export const adminRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const admin = await verifyAdminLogin(input.email, input.password)
+      const admin = await verifyAdminLogin(input.email, input.password);
       if (!admin) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "Invalid email or password",
-        })
+        });
       }
 
-      const secret = new TextEncoder().encode(ENV.cookieSecret)
+      const secret = new TextEncoder().encode(ENV.cookieSecret);
       const token = await new jwt.SignJWT({
         adminId: admin.id,
         email: admin.email,
@@ -34,13 +38,13 @@ export const adminRouter = router({
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("7d")
-        .sign(secret)
+        .sign(secret);
 
-      const cookieOptions = getSessionCookieOptions(ctx.req)
+      const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.cookie(ADMIN_SESSION_COOKIE, token, {
         ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-      })
+      });
 
       return {
         success: true,
@@ -49,32 +53,32 @@ export const adminRouter = router({
           email: admin.email,
           name: admin.name,
         },
-      }
+      };
     }),
 
   me: publicProcedure.query(async ({ ctx }) => {
-    const token = ctx.req.cookies[ADMIN_SESSION_COOKIE]
+    const token = ctx.req.cookies[ADMIN_SESSION_COOKIE];
     if (!token) {
-      return null
+      return null;
     }
 
     try {
-      const secret = new TextEncoder().encode(ENV.cookieSecret)
-      const { payload } = await jwt.jwtVerify(token, secret)
+      const secret = new TextEncoder().encode(ENV.cookieSecret);
+      const { payload } = await jwt.jwtVerify(token, secret);
       return {
         adminId: payload.adminId as string,
         email: payload.email as string,
         name: payload.name as string | null,
-      }
+      };
     } catch (error) {
-      return null
+      return null;
     }
   }),
 
   logout: publicProcedure.mutation(({ ctx }) => {
-    const cookieOptions = getSessionCookieOptions(ctx.req)
-    ctx.res.clearCookie(ADMIN_SESSION_COOKIE, { ...cookieOptions, maxAge: -1 })
-    return { success: true }
+    const cookieOptions = getSessionCookieOptions(ctx.req);
+    ctx.res.clearCookie(ADMIN_SESSION_COOKIE, { ...cookieOptions, maxAge: -1 });
+    return { success: true };
   }),
 
   updateEmail: publicProcedure
@@ -85,20 +89,23 @@ export const adminRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const token = ctx.req.cookies[ADMIN_SESSION_COOKIE]
+      const token = ctx.req.cookies[ADMIN_SESSION_COOKIE];
       if (!token) {
-        throw new TRPCError({ code: "UNAUTHORIZED" })
+        throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const success = await updateAdminEmail(input.currentEmail, input.newEmail)
+      const success = await updateAdminEmail(
+        input.currentEmail,
+        input.newEmail,
+      );
       if (!success) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update email",
-        })
+        });
       }
 
-      return { success: true }
+      return { success: true };
     }),
 
   updatePassword: publicProcedure
@@ -109,19 +116,19 @@ export const adminRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const token = ctx.req.cookies[ADMIN_SESSION_COOKIE]
+      const token = ctx.req.cookies[ADMIN_SESSION_COOKIE];
       if (!token) {
-        throw new TRPCError({ code: "UNAUTHORIZED" })
+        throw new TRPCError({ code: "UNAUTHORIZED" });
       }
 
-      const success = await updateAdminPassword(input.email, input.newPassword)
+      const success = await updateAdminPassword(input.email, input.newPassword);
       if (!success) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to update password",
-        })
+        });
       }
 
-      return { success: true }
+      return { success: true };
     }),
-})
+});

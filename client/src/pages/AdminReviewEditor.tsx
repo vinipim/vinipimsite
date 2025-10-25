@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { trpc } from "../trpc"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { trpc } from "../trpc";
 
 export default function AdminReviewEditor() {
-  const navigate = useNavigate()
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [type, setType] = useState<"book" | "film">("book")
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [type, setType] = useState<"book" | "film">("book");
 
-  const createMutation = trpc.reviews.create.useMutation()
+  const createMutation = trpc.reviews.create.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await createMutation.mutateAsync({ title, content, type })
-      navigate("/admin/dashboard")
+      await createMutation.mutateAsync({ title, content, type });
+      navigate("/admin/dashboard");
     } catch (error) {
-      alert("Failed to save review")
+      alert("Failed to save review");
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -50,10 +50,13 @@ export default function AdminReviewEditor() {
           rows={10}
           className="w-full border rounded px-4 py-2"
         />
-        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 py-2 rounded"
+        >
           Save
         </button>
       </form>
     </div>
-  )
+  );
 }

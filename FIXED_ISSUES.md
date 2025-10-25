@@ -3,9 +3,11 @@
 ## 🔒 Security Issues (CRITICAL)
 
 ### 1. Posts CRUD Had No Authentication
+
 **Problem**: Anyone could create, update, or delete blog posts without logging in.
 
-**Fixed**: 
+**Fixed**:
+
 - Changed `publicProcedure` to `protectedProcedure` for create/update/delete operations
 - Added admin role verification
 - Now only authenticated admins can modify posts
@@ -15,6 +17,7 @@
 ## 🐛 Configuration Issues
 
 ### 2. Database Schema Path Wrong
+
 **Problem**: `drizzle.config.ts` pointed to wrong schema location
 
 **Fixed**: Updated path from `./server/db/schema.ts` to `./drizzle/schema.ts`
@@ -24,9 +27,11 @@
 ## 📦 Deployment Issues
 
 ### 3. Missing Deployment Documentation
+
 **Problem**: No clear instructions for Railway/Vercel deployment
 
 **Fixed**: Created comprehensive `DEPLOYMENT_GUIDE.md` with:
+
 - Step-by-step Railway setup
 - Vercel configuration
 - Environment variables list
@@ -34,6 +39,7 @@
 - Admin account creation guide
 
 ### 4. Vercel Configuration Incomplete
+
 **Problem**: `vercel.json` wasn't optimized for Express + Vite setup
 
 **Fixed**: Updated configuration with proper build settings and function routing

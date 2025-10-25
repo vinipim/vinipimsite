@@ -1,4 +1,11 @@
-import { mysqlEnum, mysqlTable, text, timestamp, varchar, int } from "drizzle-orm/mysql-core"
+import {
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+  int,
+} from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -11,10 +18,10 @@ export const users = mysqlTable("users", {
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow(),
-})
+});
 
-export type User = typeof users.$inferSelect
-export type InsertUser = typeof users.$inferInsert
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
 
 /**
  * Admin credentials table for custom authentication
@@ -26,10 +33,10 @@ export const adminCredentials = mysqlTable("adminCredentials", {
   name: text("name"),
   createdAt: timestamp("createdAt").defaultNow(),
   lastLogin: timestamp("lastLogin"),
-})
+});
 
-export type AdminCredential = typeof adminCredentials.$inferSelect
-export type InsertAdminCredential = typeof adminCredentials.$inferInsert
+export type AdminCredential = typeof adminCredentials.$inferSelect;
+export type InsertAdminCredential = typeof adminCredentials.$inferInsert;
 
 /**
  * Posts table for blog content
@@ -46,10 +53,10 @@ export const posts = mysqlTable("posts", {
   publishedAt: timestamp("publishedAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
   authorId: varchar("authorId", { length: 64 }),
-})
+});
 
-export type Post = typeof posts.$inferSelect
-export type InsertPost = typeof posts.$inferInsert
+export type Post = typeof posts.$inferSelect;
+export type InsertPost = typeof posts.$inferInsert;
 
 /**
  * Reviews table for films, albums, and books
@@ -69,10 +76,10 @@ export const reviews = mysqlTable("reviews", {
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
   userId: varchar("userId", { length: 64 }),
-})
+});
 
-export type Review = typeof reviews.$inferSelect
-export type InsertReview = typeof reviews.$inferInsert
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = typeof reviews.$inferInsert;
 
 /**
  * Media files table
@@ -89,7 +96,7 @@ export const media = mysqlTable("media", {
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt").defaultNow(),
   userId: varchar("userId", { length: 64 }),
-})
+});
 
-export type Media = typeof media.$inferSelect
-export type InsertMedia = typeof media.$inferInsert
+export type Media = typeof media.$inferSelect;
+export type InsertMedia = typeof media.$inferInsert;
