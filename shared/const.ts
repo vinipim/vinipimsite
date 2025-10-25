@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Shared constants used across client and server
  */
@@ -29,3 +30,16 @@ export const ALLOWED_DOCUMENT_TYPES = [
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ] as const;
+=======
+export const APP_NAME = "Vinipim Portfolio"
+export const APP_DESCRIPTION = "Personal portfolio and blog"
+export const API_URL = process.env.VITE_API_URL || "/api"
+
+export const UNAUTHED_ERR_MSG = "Unauthorized"
+export const NOT_ADMIN_ERR_MSG = "Not an admin"
+
+
+export const COOKIE_NAME = "session"
+export const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000
+
+>>>>>>> 7fd43ae83b63db3cb28e177a5f07135d563dea81
