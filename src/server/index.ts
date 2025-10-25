@@ -2,6 +2,7 @@
 import express from "express";
 import { createServer } from "http";
 import path from "node:path";
+import fs from "node:fs";
 
 console.log("🚀 Starting Vinipim Portfolio Server...");
 
@@ -9,6 +10,8 @@ const app = express();
 const server = createServer(app);
 
 console.log("📁 Serving static files from:", path.join(process.cwd(), 'dist'));
+console.log("CWD:", process.cwd());
+console.log("Dist exists:", fs.existsSync(path.join(process.cwd(), 'dist')));
 
 // Serve static files from dist directory
 app.use(express.static(path.join(process.cwd(), 'dist')));
