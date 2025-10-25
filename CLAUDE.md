@@ -1,35 +1,43 @@
-# Fix Progress - Railway Deployment Issue
+# Railway Deployment - FIXED
 
-## Issues Found & Fixed
+## What Was Wrong
 
-1. ✅ **serveStatic() missing distPath parameter** - FIXED in server/\_core/index.ts:94
-   - Changed: `serveStatic(app)` → `serveStatic(app, distPublicPath)`
-   - Path: `path.join(__dirname, "public")`
-
-2. ✅ **railway.toml startCommand** - FIXED
-   - Changed: `pnpm start` → `node dist/index.js`
-   - Better error handling for production
-
-## Current Status
-
-- Vite build config: ✅ OK (outputs to dist/public)
-- Express static serving: ✅ FIXED (now has correct path)
-- Railway config: ✅ FIXED (using direct node command)
-- Database connection: ✅ OK (proper retry logic in server/db.ts)
-- Environment variables: ✅ OK (server/\_core/env.ts loads correctly)
-
-## Remaining Tasks
-
-1. Build locally and test
-2. Verify dist/public folder gets created
-3. Start dev server to confirm
-
-## Run Commands
-
-```bash
-cd c:\Users\vinil\vinipimsite\vinipimsite
-pnpm build
-pnpm dev
+**railway.toml** had wrong startCommand:
+```toml
+startCommand = "npx tsx src/server/index.ts"  # ❌ Wrong
 ```
 
-Then commit and push to Railway.
+Server needs to run compiled dist, not TypeScript.
+
+## What Was Fixed
+
+**railway.toml** line 5:
+```toml
+startCommand = "node dist/server/index.js"  # ✅ Correct
+```
+
+Matches `package.json` `"start": "node dist/server/index.js"`
+
+## Deployment Chain
+
+1. **Build**: `pnpm install --frozen-lockfile && pnpm build`
+   - Vite compiles React → `dist/index.html`, `dist/assets/*`
+   - esbuild compiles server → `dist/server/index.js`
+
+2. **Start**: `node dist/server/index.js`
+   - Serves static files from `dist/`
+   - Express at `:3000`
+   - Health check: `/health`
+
+3. **Static Serving** (`src/server/index.ts`):
+   ```js
+   app.use(express.static(path.join(process.cwd(), 'dist')));
+   app.get("/", (req, res) => res.sendFile('dist/index.html'));
+   ```
+
+## Status
+
+✅ Build works  
+✅ Types pass  
+✅ dist/server/index.js builds  
+✅ Ready to push to Railway

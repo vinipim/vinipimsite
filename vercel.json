@@ -3,20 +3,19 @@
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
   "framework": null,
-  "outputDirectory": "dist/public",
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    }
-  ],
   "functions": {
-    "dist/index.js": {
-      "runtime": "nodejs20.x",
+    "dist/server/index.js": {
+      "runtime": "@vercel/node",
       "memory": 1024,
       "maxDuration": 10
     }
   },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/dist/server/index.js"
+    }
+  ],
   "env": {
     "NODE_ENV": "production"
   }
