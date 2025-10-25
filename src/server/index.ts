@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 });
 
 // SPA fallback - serve index.html for all other routes
-app.get('*', (req, res) => {
+app.all('*', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
 });
 

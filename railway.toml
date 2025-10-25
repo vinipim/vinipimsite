@@ -2,7 +2,7 @@
 buildCommand = "pnpm install --frozen-lockfile && pnpm build"
 
 [deploy]
-startCommand = "node dist/server/index.js"
+startCommand = "npx tsx src/server/index.ts"
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 
