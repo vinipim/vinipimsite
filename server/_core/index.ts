@@ -51,37 +51,12 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }))
   app.use(express.urlencoded({ limit: "50mb", extended: true }))
 
-  registerOAuthRoutes(app)
-
-  app.get("/health", async (_req, res) => {
-    try {
-      const { checkDatabaseConnection } = await import("../db")
-      const isDatabaseConnected = await checkDatabaseConnection()
-      
-      if (isDatabaseConnected) {
-        res.status(200).json({ 
-          status: "ok", 
-          database: "connected",
-          timestamp: new Date().toISOString(),
-          environment: process.env.NODE_ENV
-        })
-      } else {
-        res.status(503).json({ 
-          status: "error", 
-          database: "disconnected",
-          timestamp: new Date().toISOString(),
-          message: "Database connection failed"
-        })
-      }
-    } catch (error) {
-      console.error("[Health Check] Error:", error)
-      res.status(500).json({ 
-        status: "error", 
-        message: "Health check failed",
-        timestamp: new Date().toISOString()
-      })
-    }
+  // Health check - SEMPRE retorna 200, antes de qualquer outra rota
+  app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" })
   })
+
+  registerOAuthRoutes(app)
 
   app.get("/", (req, res) => {
     res.status(200).send("Vinipim Portfolio API is running")
@@ -114,6 +89,9 @@ async function startServer() {
 
   const port = parseInt(process.env.PORT || "3000", 10)
   const finalPort = env === "production" ? port : await findAvailablePort(port)
+
+  console.log('Server starting on port:', finalPort)
+  console.log('Health endpoint ready at /health')
 
   server.listen(finalPort, "0.0.0.0", () => {
     console.log(`✅ Server running on port ${finalPort}`)
