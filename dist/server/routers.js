@@ -7,8 +7,7 @@ import { reviewsRouter } from "./reviewsRouter";
 import { postsRouter } from "./postsRouter";
 import { uploadRouter } from "./uploadRouter";
 import { mediaRouter } from "./mediaRouter";
-
-export const appRouter = router({
+const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
@@ -16,15 +15,16 @@ export const appRouter = router({
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return {
-        success: true,
-      } as const;
-    }),
+        success: true
+      };
+    })
   }),
   admin: adminRouter,
   reviews: reviewsRouter,
   posts: postsRouter,
   upload: uploadRouter,
-  media: mediaRouter,
+  media: mediaRouter
 });
-
-export type AppRouter = typeof appRouter;
+export {
+  appRouter
+};
