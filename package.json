@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "vite build --mode production && node scripts/copy-server.js && npx tsx scripts/build-server.js",
+    "build": "vite build && node scripts/build-server.js",
     "build:railway": "npm run build",
     "start": "node dist/server/index.js",
     "start:railway": "npm run start",

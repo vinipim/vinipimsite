@@ -6,7 +6,7 @@ import fs from "fs"
 import { fileURLToPath } from "url"
 import { createExpressMiddleware } from "@trpc/server/adapters/express"
 import { appRouter } from "../routers"
-import { createContext } from "../context"
+import { createContext } from "./context"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const distPath = path.join(__dirname, '../../dist')
