@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle, type MySql2Database } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import { type InsertUser, users } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
-let _db: ReturnType<typeof drizzle> | null = null;
-let _connection: mysql.Connection | null = null;
+let _db: MySql2Database | null = null;
+let _connection: mysql.Pool | null = null;
 let _connectionAttempts = 0;
 const MAX_CONNECTION_ATTEMPTS = 10;
 const RETRY_DELAY_MS = 5000;
@@ -30,17 +30,25 @@ export async function getDb() {
 
   try {
     // Create a connection with individual MySQL variables
-    _connection = await mysql.createConnection({
+    _connection = mysql.createPool({
       host: process.env.MYSQLHOST,
       port: parseInt(process.env.MYSQLPORT || '3306', 10),
       user: process.env.MYSQLUSER,
       password: process.env.MYSQLPASSWORD,
       database: process.env.MYSQLDATABASE,
       connectTimeout: 10000, // 10 seconds
+      // Connection pool settings for production
+      ...(process.env.NODE_ENV === "production"
+        ? {
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+          }
+        : {}),
     });
 
     // Create the Drizzle instance
-    _db = drizzle(_connection);
+    _db = drizzle(_connection) as MySql2Database;
 
     // Test the connection
     await _connection.query("SELECT 1");
@@ -61,7 +69,7 @@ export async function getDb() {
     _db = null;
     if (_connection) {
       try {
-        await _connection.destroy();
+        await _connection.end();
       } catch (endError) {
         console.error("[Database] Error closing failed connection:", endError);
       }
