@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "start": "node dist/server/index.js",
     "test": "vitest run",
-    "deploy:prepare": "pnpm db:setup && pnpm create:admin"
+    "verify-deploy": "node scripts/verify-deploy.js"
   },
   "dependencies": {
     "@trpc/client": "latest",
