@@ -20,16 +20,22 @@ export async function getDb() {
     return _db;
   }
 
-  // If no DATABASE_URL is provided, we can't connect
-  if (!process.env.DATABASE_URL) {
-    console.error("[Database] DATABASE_URL environment variable is not set");
+  // If no required environment variables are provided, we can't connect
+  const requiredVars = ['MYSQLHOST', 'MYSQLPORT', 'MYSQLUSER', 'MYSQLPASSWORD', 'MYSQLDATABASE'];
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
+  if (missingVars.length > 0) {
+    console.error(`[Database] Missing required environment variables: ${missingVars.join(', ')}`);
     return null;
   }
 
   try {
-    // Create a connection with appropriate timeout settings
-    _connection = await mysql.createConnection({
-      uri: process.env.DATABASE_URL,
+    // Create a connection with individual MySQL variables
+    _connection = await mysql.createPool({
+      host: process.env.MYSQLHOST,
+      port: parseInt(process.env.MYSQLPORT || '3306', 10),
+      user: process.env.MYSQLUSER,
+      password: process.env.MYSQLPASSWORD,
+      database: process.env.MYSQLDATABASE,
       connectTimeout: 10000, // 10 seconds
       // Connection pool settings for production
       ...(process.env.NODE_ENV === "production"
