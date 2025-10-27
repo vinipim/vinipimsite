@@ -30,28 +30,20 @@ export async function getDb() {
 
   try {
     // Create a connection with individual MySQL variables
-    _connection = await mysql.createPool({
+    _connection = await mysql.createConnection({
       host: process.env.MYSQLHOST,
       port: parseInt(process.env.MYSQLPORT || '3306', 10),
       user: process.env.MYSQLUSER,
       password: process.env.MYSQLPASSWORD,
       database: process.env.MYSQLDATABASE,
       connectTimeout: 10000, // 10 seconds
-      // Connection pool settings for production
-      ...(process.env.NODE_ENV === "production"
-        ? {
-            waitForConnections: true,
-            connectionLimit: 10,
-            queueLimit: 0,
-          }
-        : {}),
     });
-
-    // Test the connection
-    await _connection.ping();
 
     // Create the Drizzle instance
     _db = drizzle(_connection);
+
+    // Test the connection
+    await _connection.query("SELECT 1");
 
     // Reset connection attempts on successful connection
     _connectionAttempts = 0;
@@ -69,7 +61,7 @@ export async function getDb() {
     _db = null;
     if (_connection) {
       try {
-        await _connection.end();
+        await _connection.destroy();
       } catch (endError) {
         console.error("[Database] Error closing failed connection:", endError);
       }
