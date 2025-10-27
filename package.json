@@ -8,6 +8,9 @@
     "build:railway": "npm run build",
     "start": "node dist/server/index.js",
     "start:railway": "npm run start",
+    "deploy": "node deploy.js",
+    "deploy:railway": "npm run deploy",
+    "fix:railway": "node scripts/railway-fix.js"
   },
   "dependencies": {
     "@trpc/client": "latest",
