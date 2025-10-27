@@ -1,29 +1,23 @@
-import { writeFileSync } from 'fs';
+// scripts/build-server.js
+import { build } from 'esbuild';
 import { join, dirname } from 'path';
-import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
 
-try {
-  // Compile the main index.ts to index.js using tsx
-  const coreIndexTs = join(rootDir, 'dist', 'server', '_core', 'index.ts');
-  const coreIndexJs = join(rootDir, 'dist', 'server', '_core', 'index.js');
+await build({
+  entryPoints: [join(rootDir, 'server', '_core', 'index.ts')],
+  outfile: join(rootDir, 'dist', 'server', 'index.js'),
+  bundle: true,
+  format: 'esm',
+  platform: 'node',
+  target: 'node18',
+  sourcemap: false,
+  minify: false,
+  keepNames: true,
+  logLevel: 'info',
+});
 
-  console.log('🔨 Compiling server with tsx...');
-  execSync(`npx tsx --output ${coreIndexJs} ${coreIndexTs}`, { stdio: 'inherit' });
-
-  // Create main index.js that imports from _core
-  const mainIndexPath = join(rootDir, 'dist', 'server', 'index.js');
-  const mainIndexContent = `// Main entry point for Railway deployment
-import './_core/index.js';
-`;
-  writeFileSync(mainIndexPath, mainIndexContent);
-
-  console.log('✅ Server compilation complete');
-} catch (error) {
-  console.error('❌ Build failed:', error.message);
-  process.exit(1);
-}
+console.log('✅ dist/server/index.js build complete');
