@@ -4,17 +4,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "vite build && node scripts/copy-server.js && npx tsx scripts/build-server.js",
-    "check": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
-    "db:setup": "pnpm db:generate && pnpm db:push",
-    "create:admin": "tsx scripts/create-admin.ts",
-    "dev": "vite",
-    "format": "prettier --write .",
+    "build": "vite build --mode production && node scripts/copy-server.js && npx tsx scripts/build-server.js",
+    "build:railway": "npm run build",
     "start": "node dist/server/index.js",
-    "test": "vitest run",
-    "verify-deploy": "node scripts/verify-deploy.js"
+    "start:railway": "npm run start",
   },
   "dependencies": {
     "@trpc/client": "latest",

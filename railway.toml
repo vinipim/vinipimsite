@@ -1,10 +1,14 @@
 [build]
+builder = "NIXPACKS"
 buildCommand = "pnpm install --frozen-lockfile && pnpm build"
 
 [deploy]
 startCommand = "node dist/server/index.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 60
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
 
 [nixpacks]
 providers = ["node"]
+phases = { setup = "npm i -g corepack@latest && corepack enable && corepack prepare --activate", install = "pnpm install --frozen-lockfile", build = "pnpm build" }
