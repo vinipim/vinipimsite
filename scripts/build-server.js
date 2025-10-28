@@ -11,7 +11,7 @@ await build({
   bundle: true,
   platform: "node",
   format: "cjs",
-  target: ["node22"],
+  target: ["node20"],
   external: ["fs", "path", "http"],
   logLevel: "info",
 });
