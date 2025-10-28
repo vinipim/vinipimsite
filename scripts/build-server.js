@@ -12,7 +12,7 @@ await build({
   platform: "node",
   format: "cjs",
   target: ["node20"],
-  external: ["fs", "path", "http"],
+  // external: ["fs", "path", "http"],
   logLevel: "info",
 });
 console.log("built dist/server/index.cjs");
