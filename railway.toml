@@ -11,4 +11,6 @@ restartPolicyMaxRetries = 3
 
 [nixpacks]
 providers = ["node"]
-phases = { setup = "npm i -g corepack@latest && corepack enable && corepack prepare --activate", install = "pnpm install --frozen-lockfile", build = "pnpm build" }
+
+[variables]
+NIXPACKS_NODE_VERSION = "22.12.0"
