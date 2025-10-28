@@ -1,8 +1,6 @@
-// scripts/build-server.js
 import { build } from "esbuild";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const root = join(__dirname, "..");
@@ -14,9 +12,7 @@ await build({
   platform: "node",
   format: "esm",
   target: ["node22"],
-  // keep Node builtins and dotenv as external to avoid "Dynamic require of 'fs'"
-  external: ["fs", "path", "http"],
-  sourcemap: false,
+  external: ["fs", "path", "http", "dotenv"],
   logLevel: "info",
 });
-console.log("dist/server/index.js built");
+console.log("built dist/server/index.js");
