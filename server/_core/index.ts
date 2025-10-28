@@ -52,6 +52,11 @@ async function startServer() {
     })
   })
 
+  // Root route for testing
+  app.get("/", (req, res) => {
+    res.json({ message: "Vinipim Portfolio Server", status: "running", timestamp: new Date().toISOString() })
+  })
+
   // API routes placeholder
   // app.use("/api/trpc", createExpressMiddleware({
   //   router: appRouter,
