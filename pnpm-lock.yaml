@@ -21,13 +21,13 @@ importers:
         specifier: latest
         version: 11.6.0(typescript@5.9.3)
       dotenv:
-        specifier: latest
+        specifier: ^17.2.3
         version: 17.2.3
       drizzle-orm:
         specifier: latest
         version: 0.44.7(mysql2@3.15.3)
       express:
-        specifier: latest
+        specifier: ^5.1.0
         version: 5.1.0
       mysql2:
         specifier: ^3.15.0
@@ -64,7 +64,7 @@ importers:
         specifier: ^0.31.4
         version: 0.31.5
       esbuild:
-        specifier: ^0.25.0
+        specifier: ^0.25.11
         version: 0.25.11
       pnpm:
         specifier: ^10.15.1
@@ -79,7 +79,7 @@ importers:
         specifier: ^5
         version: 5.9.3
       vite:
-        specifier: ^7.1.7
+        specifier: ^7.1.12
         version: 7.1.12(@types/node@22.18.12)(tsx@4.20.6)
       vitest:
         specifier: ^2.1.4
