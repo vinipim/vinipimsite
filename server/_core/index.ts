@@ -19,21 +19,6 @@ async function startServer() {
   const app = express()
   const server = createServer(app)
 
-  // Railway production optimizations
-  if (isProduction) {
-    app.set('trust proxy', 1)
-  }
-
-  // Security headers (simplified)
-  app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff')
-    next()
-  })
-
-  // Body parsing removed for simplicity
-  // app.use(express.json({ limit: "50mb" }))
-  // app.use(express.urlencoded({ limit: "50mb", extended: true }))
-
   // Health check - Railway requirement
   app.get("/health", (req, res) => {
     console.log('Health responding')
