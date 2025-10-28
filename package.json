@@ -12,7 +12,7 @@
     "create:admin": "tsx scripts/create-admin.ts",
     "dev": "vite",
     "format": "prettier --write .",
-    "start": "node dist/server/index.js",
+    "start": "node dist/server/index.cjs",
     "test": "vitest run",
     "verify-deploy": "node scripts/verify-deploy.js"
   },

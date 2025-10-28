@@ -3,9 +3,8 @@ import express from "express"
 import { createServer } from "http"
 import path from "path"
 import fs from "fs"
-import { fileURLToPath } from "url"
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.join(process.cwd(), 'server', '_core')
 const distPath = path.join(__dirname, '../../dist')
 const isProduction = process.env.NODE_ENV === "production"
 const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined
@@ -37,14 +36,7 @@ async function startServer() {
 
   // Health check - Railway requirement
   app.get("/health", (req, res) => {
-    console.log(`💚 Health check from ${req.ip} at ${new Date().toISOString()}`)
-    res.status(200).json({
-      status: "ok",
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || "development",
-      platform: isRailway ? "railway" : "local",
-      database: process.env.MYSQLHOST ? "configured" : "not configured"
-    })
+    res.status(200).send('ok')
   })
 
   // Root route for testing

@@ -9,9 +9,9 @@ const rootDir = join(__dirname, '..');
 
 await build({
   entryPoints: [join(rootDir, 'server', '_core', 'index.ts')],
-  outfile: join(rootDir, 'dist', 'server', 'index.js'),
+  outfile: join(rootDir, 'dist', 'server', 'index.cjs'),
   bundle: true,
-  format: 'esm',
+  format: 'cjs',
   platform: 'node',
   target: 'node18',
   sourcemap: false,
@@ -20,4 +20,4 @@ await build({
   logLevel: 'info',
 });
 
-console.log('✅ dist/server/index.js build complete');
+console.log('✅ dist/server/index.cjs build complete');
