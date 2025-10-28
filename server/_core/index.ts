@@ -114,7 +114,7 @@ async function startServer() {
 
   // Get port (Railway provides PORT env var)
   const port = parseInt(process.env.PORT || "8080", 10)
-  console.log(`🎯 Starting server on port ${port}`)
+  console.log(`🎯 PORT env: ${process.env.PORT}, using port: ${port}`)
 
   // Start server
   server.listen(port, "0.0.0.0", () => {
