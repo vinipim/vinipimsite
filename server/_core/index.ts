@@ -3,7 +3,8 @@ import express, { Request, Response } from "express";
 const app = express();
 
 app.get("/health", (_req: Request, res: Response) => {
-  res.status(200).end();
+  res.set("Content-Type", "application/json");
+  res.status(200).json({ status: "ok" });
 });
 
 app.get("/", (_req: Request, res: Response) => {

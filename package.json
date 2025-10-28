@@ -16,7 +16,7 @@
     "start": "node dist/server/index.js",
     "test": "vitest run",
     "verify-deploy": "node scripts/verify-deploy.js",
-    "prebuild": "node -v && pnpm approve-builds esbuild || true",
+    "prebuild": "node -v",
     "predeploy:railway": "node scripts/railway-predeploy.js",
     "fix:railway": "node scripts/railway-fix.js",
     "deploy:railway": "node scripts/railway-deploy.js",
