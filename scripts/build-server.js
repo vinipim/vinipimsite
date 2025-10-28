@@ -15,7 +15,7 @@ await build({
   format: "esm",
   target: ["node22"],
   // keep Node builtins and dotenv as external to avoid "Dynamic require of 'fs'"
-  external: ["fs", "path", "http", "dotenv"],
+  external: ["fs", "path", "http"],
   sourcemap: false,
   logLevel: "info",
 });
