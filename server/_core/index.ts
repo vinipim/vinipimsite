@@ -4,9 +4,6 @@ import { createServer } from "http"
 import path from "path"
 import fs from "fs"
 import { fileURLToPath } from "url"
-import { createExpressMiddleware } from "@trpc/server/adapters/express"
-import { appRouter } from "../routers"
-import { createContext } from "./context"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const distPath = path.join(__dirname, '../../dist')
@@ -55,11 +52,11 @@ async function startServer() {
     })
   })
 
-  // API routes
-  app.use("/api/trpc", createExpressMiddleware({
-    router: appRouter,
-    createContext,
-  }))
+  // API routes placeholder
+  // app.use("/api/trpc", createExpressMiddleware({
+  //   router: appRouter,
+  //   createContext,
+  // }))
 
   // Static file serving with SPA fallback
   if (fs.existsSync(distPath)) {
