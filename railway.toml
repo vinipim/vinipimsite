@@ -1,9 +1,17 @@
 [build]
+<<<<<<< HEAD
+=======
+builder = "NIXPACKS"
+buildCommand = "pnpm install --frozen-lockfile && pnpm build"
+>>>>>>> ae4900d (feat: complete Railway deployment optimization\n\n**Railway Production Optimizations:**\n- Enhanced railway.toml with Nixpacks phases and restart policies\n- Production-grade server with security headers and Railway detection\n- Graceful shutdown handling for Railway environment\n- Static file caching and SPA fallback optimization\n- Cross-platform build scripts with Railway-specific commands\n\n**Build & Deploy Improvements:**\n- Railway-specific build and start scripts\n- Pre-deploy validation script for Railway\n- Optimized package.json for Railway deployment\n- Railway environment configuration file\n\n**Security & Performance:**\n- Security headers for Railway (HSTS, XSS protection, etc.)\n- Trust proxy configuration for production\n- Error handling optimized for Railway\n- Health check with Railway-specific information\n\n**Railway Features Ready:**\n- Multiple deployments support\n- Build queue optimization\n- Frontend-backend sync prevention\n- 40% faster builds capability\n- Proper health checks and monitoring\n\n**Deployment Ready:**\n- All Railway requirements met\n- Build process optimized for Railway\n- Server configured for Railway environment\n- Error handling and logging optimized\n- Ready for production deployment)
 
 [deploy]
 startCommand = "node dist/server/index.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 60
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
 
 [nixpacks]
 providers = ["node"]
+phases = { setup = "npm i -g corepack@latest && corepack enable && corepack prepare --activate", install = "pnpm install --frozen-lockfile", build = "pnpm build" }
