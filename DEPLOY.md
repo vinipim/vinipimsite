@@ -1,110 +1,30 @@
-# 🚀 Vinipim Portfolio - Railway Deploy
+# Railway Deployment Guide
 
-## 🔥 DEPLOY ULTRA-SIMPLES (Recomendado)
+## Quick Deploy (recommended)
+- `railway login`
+- `pnpm run deploy`
 
-### 1. Login no Railway
-```bash
-railway login
-```
+The deploy script installs the Railway CLI if needed, checks your login, links the `vinipimsite` project, runs the production build, and triggers the deploy. You can also run it with `npm run deploy` if you prefer npm.
 
-### 2. Deploy Automático Completo
-```bash
-npm run deploy
-```
+## Troubleshooting Helper
+- `pnpm run fix:railway`
 
-**Isso faz TUDO automaticamente:**
-- ✅ Instala Railway CLI
-- ✅ Verifica login
-- ✅ Vincula projeto
-- ✅ Valida configurações
-- ✅ Corrige problemas automaticamente
-- ✅ Faz build
-- ✅ Deploy no Railway
-- ✅ Mostra status final
+This helper checks for the CLI, verifies the link, validates `railway.toml`, and reruns the build so you can fix common issues before deploying again.
 
----
+## Manual Deploy (fallback)
+1. `pnpm run build`
+2. `railway deploy`
+3. `railway status` and `railway logs` if you need to inspect the rollout
 
-## 🔧 DEPLOY COM AUTOMAÇÃO EXTRA
+## Useful Scripts
+- `pnpm run build:server` – compile the API layer only
+- `pnpm run predeploy:railway` – fast validation before shipping
+- `pnpm run verify-deploy` – end-to-end build and smoke test
 
-### Se tiver problemas, use o Auto-Fix primeiro:
-```bash
-npm run fix:railway
-```
+## Final Checklist
+- Railway dashboard shows the service as `Deployed`
+- Live URL responds on `/health`
+- Frontend is reachable
+- API responds under `/api/trpc`
 
-**O Auto-Fix corrige automaticamente:**
-- Railway CLI não instalado
-- Projeto não vinculado
-- railway.toml incorreto
-- Build script quebrado
-- Variáveis de ambiente
-
----
-
-## 📋 DEPLOY MANUAL (Passo a Passo)
-
-### 1. Build Local
-```bash
-npm run build
-```
-
-### 2. Deploy no Railway
-```bash
-railway deploy
-```
-
-### 3. Verificar Status
-```bash
-railway status
-railway logs
-```
-
----
-
-## ⚙️ SCRIPTS DISPONÍVEIS
-
-```bash
-# Deploy automático completo
-npm run deploy
-
-# Auto-fix de problemas comuns
-npm run fix:railway
-
-# Build para Railway
-npm run build:railway
-
-# Start em modo Railway
-npm run start:railway
-
-# Verificar deploy
-npm run verify-deploy
-```
-
----
-
-## 🚨 PROBLEMAS COMUNS (Auto-Corrigidos)
-
-1. **"Railway CLI not found"** → Auto-instala
-2. **"Not logged in"** → Pede login manual
-3. **"Project not linked"** → Auto-vincula
-4. **"railway.toml missing"** → Auto-cria
-5. **"Build failed"** → Auto-corrige scripts
-6. **"MySQL vars missing"** → Alerta no dashboard
-
----
-
-## 🎯 CHECKLIST FINAL
-
-Após deploy:
-- ✅ Railway dashboard mostra "Deployed"
-- ✅ URL live disponível
-- ✅ Health check responde: `/health`
-- ✅ Frontend carrega
-- ✅ API funciona: `/api/trpc`
-
-**Se algo falhar, os logs do Railway mostram exatamente o erro!**
-
----
-
-## 🚀 PRONTO PARA PRODUÇÃO!
-
-**O deploy agora é infalível com automação completa!** 🎉
+If something fails, grab the logs straight from Railway; the deploy script prints any command that needs manual follow-up.

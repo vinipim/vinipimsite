@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build && node scripts/build-server.js",
+    "build:server": "node scripts/build-server.js",
     "check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
@@ -15,7 +16,11 @@
     "start": "node dist/server/index.js",
     "test": "vitest run",
     "verify-deploy": "node scripts/verify-deploy.js",
-    "prebuild": "node -v && pnpm approve-builds esbuild || true"
+    "prebuild": "node -v && pnpm approve-builds esbuild || true",
+    "predeploy:railway": "node scripts/railway-predeploy.js",
+    "fix:railway": "node scripts/railway-fix.js",
+    "deploy:railway": "node scripts/railway-deploy.js",
+    "deploy": "node scripts/railway-deploy.js"
   },
   "dependencies": {
     "@tanstack/react-query": "latest",
