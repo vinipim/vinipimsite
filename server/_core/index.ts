@@ -25,20 +25,15 @@ async function startServer() {
     app.set('trust proxy', 1)
   }
 
-  // Security headers
+  // Security headers (simplified)
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff')
-    res.setHeader('X-Frame-Options', 'DENY')
-    res.setHeader('X-XSS-Protection', '1; mode=block')
-    if (isRailway) {
-      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
-    }
     next()
   })
 
-  // Body parsing
-  app.use(express.json({ limit: "50mb" }))
-  app.use(express.urlencoded({ limit: "50mb", extended: true }))
+  // Body parsing removed for simplicity
+  // app.use(express.json({ limit: "50mb" }))
+  // app.use(express.urlencoded({ limit: "50mb", extended: true }))
 
   // Health check - Railway requirement
   app.get("/health", (req, res) => {
