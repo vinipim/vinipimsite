@@ -7,12 +7,12 @@ const root = join(__dirname, "..");
 
 await build({
   entryPoints: [join(root, "server", "_core", "index.ts")],
-  outfile: join(root, "dist", "server", "index.js"),
+  outfile: join(root, "dist", "server", "index.cjs"),
   bundle: true,
   platform: "node",
-  format: "esm",
+  format: "cjs",
   target: ["node22"],
   external: ["fs", "path", "http"],
   logLevel: "info",
 });
-console.log("built dist/server/index.js");
+console.log("built dist/server/index.cjs");
