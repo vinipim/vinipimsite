@@ -13,5 +13,5 @@ restartPolicyMaxRetries = 3
 providers = ["node"]
 
 [variables]
-NIXPACKS_NODE_VERSION = "22.12.0"
-NODE_VERSION = "22.12.0"
+NIXPACKS_NODE_VERSION = "22"
+NODE_VERSION = "22"
