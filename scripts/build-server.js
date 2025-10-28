@@ -12,7 +12,7 @@ await build({
   platform: "node",
   format: "esm",
   target: ["node22"],
-  external: ["fs", "path", "http", "dotenv"],
+  external: ["fs", "path", "http"],
   logLevel: "info",
 });
 console.log("built dist/server/index.js");
