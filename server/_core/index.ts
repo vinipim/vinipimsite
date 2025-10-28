@@ -36,6 +36,7 @@ async function startServer() {
 
   // Health check - Railway requirement
   app.get("/health", (req, res) => {
+    console.log('Health responding')
     res.status(200).send('ok')
   })
 
@@ -105,7 +106,7 @@ async function startServer() {
   })
 
   // Get port (Railway provides PORT env var)
-  const port = parseInt(process.env.PORT || "8080", 10)
+  const port = parseInt(process.env.PORT || "3000", 10)
   console.log(`🎯 PORT env: ${process.env.PORT}, using port: ${port}`)
 
   // Start server
