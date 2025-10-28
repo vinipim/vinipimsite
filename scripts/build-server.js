@@ -20,4 +20,4 @@ await build({
   logLevel: 'info',
 });
 
-console.log('OK: dist/server/index.js');
+console.log('✅ dist/server/index.js build complete');

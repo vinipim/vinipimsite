@@ -48,7 +48,13 @@ export async function getDb() {
     });
 
     // Create the Drizzle instance
-    _db = drizzle(_connection);
+    _db = drizzle(_connection) as MySql2Database;
+
+    // Test the connection
+    await _connection.query("SELECT 1");
+
+    // Test the connection
+    await _connection.query("SELECT 1");
 
     // Test the connection
     await _connection.query("SELECT 1");
