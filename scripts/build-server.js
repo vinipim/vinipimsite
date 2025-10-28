@@ -1,18 +1,4 @@
-import { build } from "esbuild";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const root = join(__dirname, "..");
+import { execSync } from "child_process";
 
-await build({
-  entryPoints: [join(root, "server", "_core", "index.ts")],
-  outfile: join(root, "dist", "server", "index.cjs"),
-  bundle: true,
-  platform: "node",
-  format: "cjs",
-  target: ["node20"],
-  // external: ["fs", "path", "http"],
-  logLevel: "info",
-});
-console.log("built dist/server/index.cjs");
+execSync("tsc -p tsconfig.server.json", { stdio: "inherit" });
+console.log("compiled dist/server/index.js");

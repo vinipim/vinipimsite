@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 buildCommand = "pnpm install --frozen-lockfile && pnpm build"
 
 [deploy]
-startCommand = "node dist/server/index.cjs"
+startCommand = "node dist/server/index.js"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
@@ -13,5 +13,5 @@ restartPolicyMaxRetries = 3
 providers = ["node"]
 
 [variables]
-NIXPACKS_NODE_VERSION = "20.19.5"
-NODE_VERSION = "20.19.5"
+NIXPACKS_NODE_VERSION = "22.12.0"
+NODE_VERSION = "22.12.0"
