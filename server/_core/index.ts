@@ -1,7 +1,7 @@
 import express from "express";
 
 const app = express();
-app.get("/health", (_req, res) => res.status(200).json({ ok: true, port: process.env.PORT || "8080" }));
+app.get("/health", (_req, res) => res.status(200).send("ok"));
 app.get("/", (_req, res) => res.status(200).send("OK"));
 
 const port = parseInt(process.env.PORT || "8080", 10);
