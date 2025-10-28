@@ -21,7 +21,7 @@ async function startServer() {
   // Health check - Railway requirement
   app.get("/health", (req, res) => {
     console.log('Health responding')
-    res.status(200).send('ok')
+    res.status(200).end('ok')
   })
 
   // Root route for testing
