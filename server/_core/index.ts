@@ -59,36 +59,36 @@ async function startServer() {
   // }))
 
   // Static file serving with SPA fallback
-  if (fs.existsSync(distPath)) {
-    app.use(express.static(distPath, {
-      maxAge: isProduction ? '1y' : 0,
-      etag: true
-    }))
+  // if (fs.existsSync(distPath)) {
+  //   app.use(express.static(distPath, {
+  //     maxAge: isProduction ? '1y' : 0,
+  //     etag: true
+  //   }))
 
-    // SPA fallback for client-side routing
-    app.get('*', (req, res, next) => {
-      if (req.path.startsWith('/api/')) {
-        return next()
-      }
+  //   // SPA fallback for client-side routing
+  //   app.get('*', (req, res, next) => {
+  //     if (req.path.startsWith('/api/')) {
+  //       return next()
+  //     }
 
-      const indexPath = path.join(distPath, 'index.html')
-      if (fs.existsSync(indexPath)) {
-        res.sendFile(indexPath)
-      } else {
-        res.status(404).send('Application not built yet')
-      }
-    })
-  } else {
-    console.warn('⚠️  Static files not found - only API routes available')
-    app.get('/', (req, res) => {
-      res.json({
-        message: 'Vinipim Portfolio API',
-        status: 'running',
-        environment: process.env.NODE_ENV || 'development',
-        timestamp: new Date().toISOString()
-      })
-    })
-  }
+  //     const indexPath = path.join(distPath, 'index.html')
+  //     if (fs.existsSync(indexPath)) {
+  //       res.sendFile(indexPath)
+  //     } else {
+  //       res.status(404).send('Application not built yet')
+  //     }
+  //   })
+  // } else {
+  //   console.warn('⚠️  Static files not found - only API routes available')
+  //   app.get('/', (req, res) => {
+  //     res.json({
+  //       message: 'Vinipim Portfolio API',
+  //       status: 'running',
+  //       environment: process.env.NODE_ENV || 'development',
+  //       timestamp: new Date().toISOString()
+  //     })
+  //   })
+  // }
 
   // Error handling
   app.use((err: any, req: any, res: any, next: any) => {
