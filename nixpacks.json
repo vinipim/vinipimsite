@@ -1,7 +1,7 @@
 {
   "phases": {
     "setup": {
-      "nixPkgs": ["nodejs_20", "pnpm"]
+      "nixPkgs": ["nodejs", "pnpm"]
     },
     "install": {
       "cmds": ["pnpm install --frozen-lockfile"]
@@ -11,6 +11,6 @@
     }
   },
   "start": {
-    "cmd": "pnpm start"
+    "cmd": "node dist/server/index.cjs"
   }
 }

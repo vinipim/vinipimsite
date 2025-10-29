@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build && node scripts/build-server.js",
+    "build:server": "node scripts/build-server.js",
     "check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
@@ -15,7 +16,11 @@
     "start": "node dist/server/index.cjs",
     "test": "vitest run",
     "verify-deploy": "node scripts/verify-deploy.js",
-    "prebuild": "pnpm approve-builds esbuild || true"
+    "prebuild": "node -v",
+    "predeploy:railway": "node scripts/railway-predeploy.js",
+    "fix:railway": "node scripts/railway-fix.js",
+    "deploy:railway": "node scripts/railway-deploy.js",
+    "deploy": "node scripts/railway-deploy.js"
   },
   "dependencies": {
     "@tanstack/react-query": "latest",
@@ -48,6 +53,6 @@
   },
   "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
   "engines": {
-    "node": ">=20.19.5"
+    "node": ">=22.11.0"
   }
 }

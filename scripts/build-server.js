@@ -11,8 +11,8 @@ await build({
   bundle: true,
   platform: "node",
   format: "cjs",
-  target: ["node20"],
-  // external: ["fs", "path", "http"],
+  target: ["node22"],
+  external: ["express"],
   logLevel: "info",
 });
-console.log("built dist/server/index.cjs");
+console.log("built dist/server/index.js");
