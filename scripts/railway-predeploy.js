@@ -42,7 +42,7 @@ if (!packageJson.scripts.build.includes('build-server.js')) {
 
 // Verify railway.toml configuration
 const railwayToml = readFileSync(join(rootDir, 'railway.toml'), 'utf8');
-if (!railwayToml.includes('startCommand = "node dist/server/index.js"')) {
+if (!railwayToml.includes('startCommand = "node dist/server/index.cjs"')) {
   console.error('❌ Railway start command not configured');
   process.exit(1);
 }
