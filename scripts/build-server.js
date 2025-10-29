@@ -15,4 +15,4 @@ await build({
   external: ["express"],
   logLevel: "info",
 });
-console.log("built dist/server/index.js");
+console.log("built dist/server/index.cjs");

@@ -91,7 +91,7 @@ await new Promise((resolve, reject) => {
 console.log('📁 Verificando arquivos gerados...');
 const checkFiles = [
   'dist/index.html',
-  'dist/server/index.js',
+  'dist/server/index.cjs',
   'dist/server/_core/index.js'
 ];
 
@@ -110,7 +110,7 @@ console.log('🚀 Testando inicialização do servidor...');
 let serverProcess;
 
 try {
-  serverProcess = spawn('node', ['dist/server/index.js'], {
+    serverProcess = spawn('node', ['dist/server/index.cjs'], {
     cwd: rootDir,
     stdio: ['pipe', 'pipe', 'pipe']
   });
@@ -145,7 +145,7 @@ try {
 
   const tomlContent = fs.readFileSync(path.join(rootDir, 'railway.toml'), 'utf8');
 
-  if (!tomlContent.includes('startCommand = "node dist/server/index.js"')) {
+  if (!tomlContent.includes('startCommand = "node dist/server/index.cjs"')) {
     console.error('❌ railway.toml startCommand incorreto');
     process.exit(1);
   }

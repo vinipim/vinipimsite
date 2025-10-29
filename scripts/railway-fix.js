@@ -71,7 +71,7 @@ builder = "NIXPACKS"
 buildCommand = "pnpm install --frozen-lockfile && pnpm build"
 
 [deploy]
-startCommand = "node dist/server/index.js"
+startCommand = "node dist/server/index.cjs"
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
@@ -88,7 +88,7 @@ phases = { setup = "npm i -g corepack@latest && corepack enable && corepack prep
 
 // Validate railway.toml content
 const requiredConfigs = [
-  'startCommand = "node dist/server/index.js"',
+  'startCommand = "node dist/server/index.cjs"',
   'healthcheckPath = "/health"',
   'builder = "NIXPACKS"'
 ];
