@@ -3,7 +3,7 @@ const p = JSON.parse(fs.readFileSync('package.json','utf8'));
 p.type = p.type || 'module';
 p.scripts = Object.assign({}, p.scripts, {
   build: "vite build && node scripts/build-server.js",
-  start: "node dist/server/index.js",
+  start: "node dist/server/index.cjs",
   check: "tsc --noEmit",
   prebuild: "pnpm approve-builds esbuild || true"
 });
